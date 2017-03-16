@@ -75,6 +75,7 @@ Para ello el alumno deberá realizar las tareas que se describen a continuación
 	\item Realizar el despliegue de ambas MVs, para evaluar el funcionamiento de la aplicación.
 \end{itemize}
 
+\label{sec:conexion}
 \subsection{Conexión con OpenNebula}
 
 Para conectarse con OpenNebula hay que hacerlo mediante ssh conectándose a la dirección \texttt{docker.ugr.es} con el usuario \texttt{mccDNI-SIN-LETRA}. Por ejemplo:
@@ -83,6 +84,76 @@ Para conectarse con OpenNebula hay que hacerlo mediante ssh conectándose a la d
 \\ \\
 Una vez conectado escribir la siguiente orden: \texttt{oneuser login mccDNI-sin-LETRA --ssh --force}. Y con: \texttt{more .one/one\_auth} podemos obtener las credenciales para acceder a la plataforma desde la web \url{http://docker.ugr.es:9869}.
 
+\section{Despliegue de máquinas virtuales}
+
+El despliegue de máquinas virtuales se ha realizado mediante la interfaz de línea de órdenes de OpenNebula. Para ello hay que conectarse como se especificó en la sección \ref{sec:conexion}.
+
+\label{sec:crear-plantilla}
+\subsection{Crear plantilla}
+
+Para crear una plantilla necesitamos información como el identificador de la imagen como la red propia del usuario.
+\\ \\
+Para encontrar el id de la imagen que se utilizará en la plantilla, listamos las imágenes disponibles con \texttt{oneimage list}:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=14cm]{img/oneimage-list}
+	\caption{Lista de imágenes disponibles}
+	\label{fig:one-image-list}
+\end{figure}
+
+Y para dar con la red \texttt{onevnet list | grep mccDNI-SIN-LETRA}:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=14cm]{img/onevnet-list}
+	\caption{Datos de red de un usuario específico}
+	\label{fig:onevnet-list}
+\end{figure}
+
+Con estos datos ya podemos crear un template, por ejemplo:
+\\
+\texttt{onetemplate create --name ``Template\_CentOS-6.5'' --cpu 1 --vcpu 1 --memory 1024 --arch x86\_64 --disk 8 --nic ``MI-ID-RED'' --vnc --ssh --net\_context}
+\\ \\
+Esto creará un template y le asignará un identificador único. Para consultarlo podemos listar nuestros templates con \texttt{onetemplate list}:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=14cm]{img/onetemplate-list}
+	\caption{Lista de templates}
+	\label{fig:onetemplate-list}
+\end{figure}
+
+\subsection{Desplegar máquina virtual}
+
+Para crear una máquina virtual necesitaremos un template, cuyo ID podemos obtener como se ha explicado en la Sección \ref{sec:crear-plantilla}.
+\\ \\
+Tan solo hay que usar la orden \texttt{onetemplate instantiate ID}. Esto instanciará e iniciará la máquina virtual pasando por distintos estados (Figura \ref{fig:grafo-estados}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=14.5cm]{img/grafo-estados}
+	\caption{Grafo de los estados por los que pasa una máquina virtual}
+	\label{fig:grafo-estados}
+\end{figure}
+
+Para listar las máquinas virtuales usaremos \texttt{onevm list}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=14cm]{img/onevm-list}
+	\caption{Lista de máquinas virtuales}
+	\label{fig:onevm-list}
+\end{figure}
+
+La información de una máquina virtual específica la podemos consultar con \texttt{onevm show ID}. De aquí podemos obtener la dirección IP (\texttt{ETH0\_IP}) para conectarse posteriormente a ella vía ssh.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=5cm]{img/onevm-show-context}
+	\caption{Direcciones de red de una máquina virtual}
+	\label{fig:onevm-show-context}
+\end{figure}
 
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
