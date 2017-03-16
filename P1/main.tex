@@ -1,0 +1,96 @@
+\input{estilo.tex}
+\usepackage{textcomp}
+\usepackage{hyperref}
+
+%----------------------------------------------------------------------------------------
+%	DATOS
+%----------------------------------------------------------------------------------------
+
+\newcommand{\myName}{Francisco Javier Bolívar Lupiáñez}
+\newcommand{\myDegree}{Máster en Ingeniería Informática}
+\newcommand{\myFaculty}{E. T. S. de Ingenierías Informática y de Telecomunicación}
+\newcommand{\myDepartment}{Ciencias de la Computación e Inteligencia Artificial}
+\newcommand{\myUniversity}{\protect{Universidad de Granada}}
+\newcommand{\myLocation}{Granada}
+\newcommand{\myTime}{\today}
+\newcommand{\myTitle}{Práctica 1}
+\newcommand{\mySubtitle}{Despliegue de MVs y Aplicaciones Web}
+\newcommand{\mySubject}{Cloud Computing: Servicios y Aplicaciones}
+\newcommand{\myYear}{2016-2017}
+
+%----------------------------------------------------------------------------------------
+%	PORTADA
+%----------------------------------------------------------------------------------------
+
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{\textbf{\mySubject \space (\myYear)} \\ \myDepartment} \\[20pt] % Your university, school and/or department name(s)
+	\textsc{\myDegree \\[10pt] \myFaculty \\ \myUniversity} \\[25pt]
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge \myTitle: \mySubtitle \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+	\normalfont \normalsize
+}
+
+\author{\myName} % Nombre y apellidos
+
+\date{\myTime} % Incluye la fecha actual
+%----------------------------------------------------------------------------------------
+%	INDICE
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+	
+\setcounter{page}{0}
+
+\maketitle % Muestra el Título
+\thispagestyle{empty}
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+%\listoffigures
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\section{Introducción}
+
+El objetivo de esta práctica es familiarizarse con el uso de una plataforma IaaS y desarrollar habilidades de despliegue de máquinas virtuales y aplicaciones web sencillas.
+\\ \\
+Para ello el alumno deberá realizar las tareas que se describen a continuación usando la plataforma OpenNebula:
+
+\begin{itemize}
+	\item Crear dos MVs, cada una con una distribución de Linux:
+	\begin{itemize}
+		\item En la primera MV instalar y configurar un servidor web.
+		\item En la segunda MV instalar y configurar un sistema gestor de bases de datos (SGBD).
+	\end{itemize}
+	\item Desarrollar una aplicación web sencilla alojada en la MV1, que use una base de datos manejada por el SGBD instalado en al MV2. La aplicación web debe incluir el uso de formularios y la consulta y modificación de datos almacenados en la BD.
+	\item Realizar el despliegue de ambas MVs, para evaluar el funcionamiento de la aplicación.
+\end{itemize}
+
+\subsection{Conexión con OpenNebula}
+
+Para conectarse con OpenNebula hay que hacerlo mediante ssh conectándose a la dirección \texttt{docker.ugr.es} con el usuario \texttt{mccDNI-SIN-LETRA}. Por ejemplo:
+\\
+\texttt{ssh mcc12345678@docker.ugr.es}
+\\ \\
+Una vez conectado escribir la siguiente orden: \texttt{oneuser login mccDNI-sin-LETRA --ssh --force}. Y con: \texttt{more .one/one\_auth} podemos obtener las credenciales para acceder a la plataforma desde la web \url{http://docker.ugr.es:9869}.
+
+
+%----------------------------------------------------------------------------------------
+%	REFERENCIAS
+%----------------------------------------------------------------------------------------
+
+\newpage
+
+\bibliography{referencias} %archivo referencias.bib que contiene las entradas 
+\bibliographystyle{plain} % hay varias formas de citar
+
+\end{document}
