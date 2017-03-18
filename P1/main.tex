@@ -157,19 +157,21 @@ La información de una máquina virtual específica la podemos consultar con \te
 
 \section{Servidor web}
 
-Usaremos la máquina virtual con CentOS 6.5 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallApachePHPCentos6.5} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MySQL pues, recordamos, esta primera máquina virtual solo contendrá el servidor web.
+Usaremos la máquina virtual con Ubuntu 14.04 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPUbuntu14.04} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MySQL pues, recordamos, esta primera máquina virtual solo contendrá el servidor web.
 \\ \\
 Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con \texttt{yum update}.
 \\ \\
-Ahora instalaremos Apache con \texttt{yum install httpd}. Una vez instalado se puede lanzar usando \texttt{service httpd start}.
+Ahora instalaremos Apache con \texttt{apt-get update \&\& apt-get upgrade}. Una vez instalado se puede lanzar usando \texttt{service apache2 restart}.
 \\ \\
-Por último instalamos PHP y su módulo de MySQL pues la aplicación web está desarrollada con esta tecnología. Para ello ejecutamos \texttt{yum install php php-mysql}.
+Por último instalamos PHP pues la aplicación web está desarrollada con esta tecnología. Para ello ejecutamos \texttt{apt-get install php5 libapache2-mod-php5 php5-mcrypt}.
+\\ \\
+Para darle prioridad a los fuentes en .php editamos el fichero \texttt{dir.conf} que se encuentra en el directorio \texttt{/etc/apache2/mods-enabled} colocando \texttt{index.php} el primero (justo por detrás de \texttt{DirectoryIndex}).
 \\ \\
 Una vez instalado podemos cargar los fuentes en el directorio \texttt{/var/www/html/}. Yo los he obtenido clonando mi repositorio de GitHub donde están alojados: \url{https://github.com/fblupi/starsator-web}.
 
 \section{SGBD}
 
-Usaremos la máquina virtual con CentOS 6.5 para alojar nuestro SGBD (MySQL). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallApachePHPCentos6.5} con los que instalaremos MySQL ignorando los pasos para instalar Apache y PHP pues, recordamos, esta máquina virtual solo contendrá el SGBD.
+Usaremos la máquina virtual con CentOS 6.5 para alojar nuestro SGBD (MySQL). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPCentos6.5} con los que instalaremos MySQL ignorando los pasos para instalar Apache y PHP pues, recordamos, esta máquina virtual solo contendrá el SGBD.
 \\ \\
 Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con \texttt{yum update}.
 \\ \\
