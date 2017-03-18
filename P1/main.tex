@@ -155,6 +155,18 @@ La información de una máquina virtual específica la podemos consultar con \te
 	\label{fig:onevm-show-context}
 \end{figure}
 
+\section{Servidor web}
+
+Usaremos la máquina virtual con CentOS 6.5 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallApachePHPCentos6.5} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MySQL pues, recordamos, esta primera máquina virtual solo contendrá el servidor web.
+\\ \\
+Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con \texttt{yum update}.
+\\ \\
+Ahora instalaremos Apache con \texttt{yum install httpd}. Una vez instalado se puede lanzar usando \texttt{service httpd start}.
+\\ \\
+Por último instalamos PHP y su módulo de MySQL pues la aplicación web está desarrollada con esta tecnología. Para ello ejecutamos \texttt{yum install php php-mysql}.
+\\ \\
+Una vez instalado podemos cargar los fuentes en el directorio \texttt{/var/www/html/}. Yo los he obtenido clonando mi repositorio de GitHub donde están alojados: \url{https://github.com/fblupi/starsator-web}.
+
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
 %----------------------------------------------------------------------------------------
