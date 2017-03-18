@@ -167,6 +167,16 @@ Por último instalamos PHP y su módulo de MySQL pues la aplicación web está d
 \\ \\
 Una vez instalado podemos cargar los fuentes en el directorio \texttt{/var/www/html/}. Yo los he obtenido clonando mi repositorio de GitHub donde están alojados: \url{https://github.com/fblupi/starsator-web}.
 
+\section{SGBD}
+
+Usaremos la máquina virtual con CentOS 6.5 para alojar nuestro SGBD (MySQL). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallApachePHPCentos6.5} con los que instalaremos MySQL ignorando los pasos para instalar Apache y PHP pues, recordamos, esta máquina virtual solo contendrá el SGBD.
+\\ \\
+Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con \texttt{yum update}.
+\\ \\
+Ahora instalaremos Apache con \texttt{yum install mysql-server}. Una vez instalado se puede lanzar usando \texttt{service mysqld start}.
+\\ \\
+Una vez instalado podemos cargar la base de datos cargando el script que se encuentra en \url{https://github.com/fblupi/starsator-db} con la siguiente orden: \texttt{mysql < stars.sql}.
+
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
 %----------------------------------------------------------------------------------------
