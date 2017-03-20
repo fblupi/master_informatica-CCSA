@@ -159,9 +159,9 @@ La información de una máquina virtual específica la podemos consultar con \te
 
 Usaremos la máquina virtual con Ubuntu 14.04 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPUbuntu14.04} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MySQL pues, recordamos, esta primera máquina virtual solo contendrá el servidor web.
 \\ \\
-Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con \texttt{yum update}.
+Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con \texttt{apt-get update \&\& apt-get upgrade}.
 \\ \\
-Ahora instalaremos Apache con \texttt{apt-get update \&\& apt-get upgrade}. Una vez instalado se puede lanzar usando \texttt{service apache2 restart}.
+Ahora instalaremos Apache con \texttt{apt-get install apache2}. Una vez instalado se puede lanzar usando \texttt{service apache2 restart}.
 \\ \\
 Por último instalamos PHP pues la aplicación web está desarrollada con esta tecnología. Para ello ejecutamos \texttt{apt-get install php5 libapache2-mod-php5 php5-mcrypt}.
 \\ \\
