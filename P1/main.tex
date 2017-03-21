@@ -45,6 +45,7 @@
 \definecolor{light-gray}{gray}{0.95}
 	
 \lstset {
+	basicstyle=\scriptsize,
 	frame=single,
 	backgroundcolor=\color{grey}
 }
@@ -86,10 +87,24 @@ Para ello el alumno deberá realizar las tareas que se describen a continuación
 \subsection{Conexión con OpenNebula}
 
 Para conectarse con OpenNebula hay que hacerlo mediante ssh conectándose a la dirección \texttt{docker.ugr.es} con el usuario \texttt{mccDNI-SIN-LETRA}. Por ejemplo:
-\\
-\texttt{ssh mcc12345678@docker.ugr.es}
-\\ \\
-Una vez conectado escribir la siguiente orden: \texttt{oneuser login mccDNI-sin-LETRA --ssh --force}. Y con: \texttt{more .one/one\_auth} podemos obtener las credenciales para acceder a la plataforma desde la web \url{http://docker.ugr.es:9869}.
+
+\begin{lstlisting}
+ssh mcc12345678@docker.ugr.es
+\end{lstlisting}
+
+Una vez conectado escribir la siguiente orden: 
+
+\begin{lstlisting}
+oneuser login mccDNI-sin-LETRA --ssh --force
+\end{lstlisting}
+
+Y con: 
+
+\begin{lstlisting}
+more .one/one\_auth
+\end{lstlisting}
+
+podemos obtener las credenciales para acceder a la plataforma desde la web \url{http://docker.ugr.es:9869}.
 
 \section{Despliegue de máquinas virtuales}
 
@@ -100,7 +115,11 @@ El despliegue de máquinas virtuales se ha realizado mediante la interfaz de lí
 
 Para crear una plantilla necesitamos información como el identificador de la imagen como la red propia del usuario.
 \\ \\
-Para encontrar el id de la imagen que se utilizará en la plantilla, listamos las imágenes disponibles con \texttt{oneimage list}:
+Para encontrar el id de la imagen que se utilizará en la plantilla, listamos las imágenes disponibles con:
+
+\begin{lstlisting}
+oneimage list
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
@@ -109,7 +128,11 @@ Para encontrar el id de la imagen que se utilizará en la plantilla, listamos la
 	\label{fig:one-image-list}
 \end{figure}
 
-Y para dar con la red \texttt{onevnet list | grep mccDNI-SIN-LETRA}:
+Y para dar con la red:
+
+\begin{lstlisting}
+onevnet list | grep mccDNI-SIN-LETRA
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
@@ -119,10 +142,18 @@ Y para dar con la red \texttt{onevnet list | grep mccDNI-SIN-LETRA}:
 \end{figure}
 
 Con estos datos ya podemos crear un template, por ejemplo:
-\\
-\texttt{onetemplate create --name ``Template\_CentOS-6.5'' --cpu 1 --vcpu 1 --memory 1024 --arch x86\_64 --disk 8 --nic ``MI-ID-RED'' --vnc --ssh --net\_context}
-\\ \\
-Esto creará un template y le asignará un identificador único. Para consultarlo podemos listar nuestros templates con \texttt{onetemplate list}:
+
+\begin{lstlisting}
+onetemplate create --name "Template_CentOS-6.5" --cpu 1 
+--vcpu 1 --memory 1024 --arch x86_64 --disk 8 
+--nic "MI-ID-RED" --vnc --ssh --net_context
+\end{lstlisting}
+
+Esto creará un template y le asignará un identificador único. Para consultarlo podemos listar nuestros templates con:
+
+\begin{lstlisting}
+onetemplate list
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
@@ -135,7 +166,13 @@ Esto creará un template y le asignará un identificador único. Para consultarl
 
 Para crear una máquina virtual necesitaremos un template, cuyo ID podemos obtener como se ha explicado en la Sección \ref{sec:crear-plantilla}.
 \\ \\
-Tan solo hay que usar la orden \texttt{onetemplate instantiate ID}. Esto instanciará e iniciará la máquina virtual pasando por distintos estados (Figura \ref{fig:grafo-estados}).
+Tan solo hay que usar la orden:
+
+\begin{lstlisting}
+onetemplate instantiate ID
+\end{lstlisting}
+
+Esto instanciará e iniciará la máquina virtual pasando por distintos estados (Figura \ref{fig:grafo-estados}).
 
 \begin{figure}[H]
 	\centering
@@ -144,7 +181,11 @@ Tan solo hay que usar la orden \texttt{onetemplate instantiate ID}. Esto instanc
 	\label{fig:grafo-estados}
 \end{figure}
 
-Para listar las máquinas virtuales usaremos \texttt{onevm list}.
+Para listar las máquinas virtuales usaremos:
+
+\begin{lstlisting}
+onevm list
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering
@@ -153,7 +194,13 @@ Para listar las máquinas virtuales usaremos \texttt{onevm list}.
 	\label{fig:onevm-list}
 \end{figure}
 
-La información de una máquina virtual específica la podemos consultar con \texttt{onevm show ID}. De aquí podemos obtener la dirección IP (\texttt{ETH0\_IP}) para conectarse posteriormente a ella vía ssh.
+La información de una máquina virtual específica la podemos consultar con:
+
+\begin{lstlisting}
+onevm show ID
+\end{lstlisting}
+
+De aquí podemos obtener la dirección IP (\texttt{ETH0\_IP}) para conectarse posteriormente a ella vía ssh:
 
 \begin{figure}[H]
 	\centering
@@ -166,12 +213,31 @@ La información de una máquina virtual específica la podemos consultar con \te
 
 Usaremos la máquina virtual con Ubuntu 14.04 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPUbuntu14.04} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MySQL pues, recordamos, esta primera máquina virtual solo contendrá el servidor web.
 \\ \\
-Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con \texttt{apt-get update \&\& apt-get upgrade}.
-\\ \\
-Ahora instalaremos Apache con \texttt{apt-get install apache2}. Una vez instalado se puede lanzar usando \texttt{service apache2 restart}.
-\\ \\
-Por último instalamos PHP pues la aplicación web está desarrollada con esta tecnología. Para ello ejecutamos \texttt{apt-get install php5 libapache2-mod-php5 php5-mcrypt}.
-\\ \\
+Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con:
+
+\begin{lstlisting}
+apt-get update && apt-get upgrade
+\end{lstlisting}
+
+Ahora instalaremos Apache con:
+
+\begin{lstlisting}
+apt-get install apache2
+\end{lstlisting}
+
+
+Una vez instalado se puede lanzar usando:
+
+\begin{lstlisting}
+service apache2 restart
+\end{lstlisting}
+
+Por último instalamos PHP pues la aplicación web está desarrollada con esta tecnología. Para ello ejecutamos:
+
+\begin{lstlisting}
+apt-get install php5 libapache2-mod-php5 php5-mcrypt
+\end{lstlisting}
+
 Para darle prioridad a los fuentes en .php editamos el fichero \texttt{dir.conf} que se encuentra en el directorio \texttt{/etc/apache2/mods-enabled} colocando \texttt{index.php} el primero (justo por detrás de \texttt{DirectoryIndex}).
 \\ \\
 Una vez instalado podemos cargar los fuentes en el directorio \texttt{/var/www/html/}. Yo los he obtenido clonando mi repositorio de GitHub donde están alojados: \url{https://github.com/fblupi/starsator-web}.
@@ -180,11 +246,29 @@ Una vez instalado podemos cargar los fuentes en el directorio \texttt{/var/www/h
 
 Usaremos la máquina virtual con CentOS 6.5 para alojar nuestro SGBD (MySQL). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPCentos6.5} con los que instalaremos MySQL ignorando los pasos para instalar Apache y PHP pues, recordamos, esta máquina virtual solo contendrá el SGBD.
 \\ \\
-Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con \texttt{yum update}.
-\\ \\
-Ahora instalaremos Apache con \texttt{yum install mysql-server}. Una vez instalado se puede lanzar usando \texttt{service mysqld start}.
-\\ \\
-Una vez instalado podemos cargar la base de datos cargando el script que se encuentra en \url{https://github.com/fblupi/starsator-db} con la siguiente orden: \texttt{mysql < stars.sql}.
+Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con:
+
+\begin{lstlisting}
+yum update
+\end{lstlisting}
+
+Ahora instalaremos Apache con:
+
+\begin{lstlisting}
+yum install mysql-server
+\end{lstlisting}
+
+Una vez instalado se puede lanzar usando:
+
+\begin{lstlisting}
+service mysqld start
+\end{lstlisting}
+
+Una vez instalado podemos cargar la base de datos cargando el script que se encuentra en \url{https://github.com/fblupi/starsator-db} con la siguiente orden:
+
+\begin{lstlisting}
+mysql < stars.sql
+\end{lstlisting}
 
 \section{Conectar ambas máquinas virtuales}
 
@@ -192,16 +276,25 @@ Una vez instalado podemos cargar la base de datos cargando el script que se encu
 
 Lo primero que hay que hacer es abrir el puerto 80 en la máquina donde se aloja el SGBD y asignárselo a MySQL para poder acceder externamente al servicio.
 \\ \\
-Para ello hay que abrir el puerto usando \texttt{iptables} \cite{OpenPortIptables} usando la orden: \texttt{iptables -I INPUT -p tcp -m tcp --dport 80 -j ACCEPT \&\& service iptables save}.
-\\ \\
-A continuación hay que editar el fichero \texttt{my.cnf} que se encuentra en \texttt{/etc} y agregarle las líneas: \texttt{[client] port=80}. 
+Para ello hay que abrir el puerto usando \texttt{iptables} \cite{OpenPortIptables} usando la orden:
+
+\begin{lstlisting}
+iptables -I INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+service iptables save
+\end{lstlisting}
+
+A continuación hay que editar el fichero \texttt{my.cnf} que se encuentra en \texttt{/etc} y agregarle las líneas: 
 
 \begin{lstlisting}
 [client]
 port=80
 \end{lstlisting}
 
-Y finalmente se reinicia el servicio: \texttt{service mysqld restart}.
+Y finalmente se reinicia el servicio: 
+
+\begin{lstlisting}
+service mysqld restart
+\end{lstlisting}
 
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
