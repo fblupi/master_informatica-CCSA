@@ -42,6 +42,13 @@
 
 \begin{document}
 	
+\definecolor{light-gray}{gray}{0.95}
+	
+\lstset {
+	frame=single,
+	backgroundcolor=\color{grey}
+}
+	
 \setcounter{page}{0}
 
 \maketitle % Muestra el Título
@@ -178,6 +185,23 @@ Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh 
 Ahora instalaremos Apache con \texttt{yum install mysql-server}. Una vez instalado se puede lanzar usando \texttt{service mysqld start}.
 \\ \\
 Una vez instalado podemos cargar la base de datos cargando el script que se encuentra en \url{https://github.com/fblupi/starsator-db} con la siguiente orden: \texttt{mysql < stars.sql}.
+
+\section{Conectar ambas máquinas virtuales}
+
+\subsection{SGBD}
+
+Lo primero que hay que hacer es abrir el puerto 80 en la máquina donde se aloja el SGBD y asignárselo a MySQL para poder acceder externamente al servicio.
+\\ \\
+Para ello hay que abrir el puerto usando \texttt{iptables} \cite{OpenPortIptables} usando la orden: \texttt{iptables -I INPUT -p tcp -m tcp --dport 80 -j ACCEPT \&\& service iptables save}.
+\\ \\
+A continuación hay que editar el fichero \texttt{my.cnf} que se encuentra en \texttt{/etc} y agregarle las líneas: \texttt{[client] port=80}. 
+
+\begin{lstlisting}
+[client]
+port=80
+\end{lstlisting}
+
+Y finalmente se reinicia el servicio: \texttt{service mysqld restart}.
 
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
