@@ -144,8 +144,8 @@ onevnet list | grep mccDNI-SIN-LETRA
 Con estos datos ya podemos crear un template, por ejemplo:
 
 \begin{lstlisting}
-onetemplate create --name "Template_CentOS-6.5" --cpu 1 
---vcpu 1 --memory 1024 --arch x86_64 --disk 8 
+onetemplate create --name "Template_CentOS-7" --cpu 1 
+--vcpu 1 --memory 1024 --arch x86_64 --disk 9 
 --nic "MI-ID-RED" --vnc --ssh --net_context
 \end{lstlisting}
 
@@ -209,42 +209,9 @@ De aquí podemos obtener la dirección IP (\texttt{ETH0\_IP}) para conectarse po
 	\label{fig:onevm-show-context}
 \end{figure}
 
-\section{Servidor web}
-
-Usaremos la máquina virtual con Ubuntu 14.04 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPUbuntu14.04} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MySQL pues, recordamos, esta primera máquina virtual solo contendrá el servidor web.
-\\ \\
-Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con:
-
-\begin{lstlisting}
-apt-get update && apt-get upgrade
-\end{lstlisting}
-
-Ahora instalaremos Apache con:
-
-\begin{lstlisting}
-apt-get install apache2
-\end{lstlisting}
-
-
-Una vez instalado se puede lanzar usando:
-
-\begin{lstlisting}
-service apache2 restart
-\end{lstlisting}
-
-Por último instalamos PHP pues la aplicación web está desarrollada con esta tecnología. Para ello ejecutamos:
-
-\begin{lstlisting}
-apt-get install php5 libapache2-mod-php5 php5-mcrypt
-\end{lstlisting}
-
-Para darle prioridad a los fuentes en .php editamos el fichero \texttt{dir.conf} que se encuentra en el directorio \texttt{/etc/apache2/mods-enabled} colocando \texttt{index.php} el primero (justo por detrás de \texttt{DirectoryIndex}).
-\\ \\
-Una vez instalado podemos cargar los fuentes en el directorio \texttt{/var/www/html/}. Yo los he obtenido clonando mi repositorio de GitHub donde están alojados: \url{https://github.com/fblupi/starsator-web}.
-
 \section{SGBD}
 
-Usaremos la máquina virtual con CentOS 6.5 para alojar nuestro SGBD (MySQL). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPCentos6.5} con los que instalaremos MySQL ignorando los pasos para instalar Apache y PHP pues, recordamos, esta máquina virtual solo contendrá el SGBD.
+Usaremos la máquina virtual con CentOS 7 para alojar nuestro SGBD (MariaDB). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallMariaDBCentos7} con los que instalaremos MariaDB.
 \\ \\
 Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con:
 
@@ -255,13 +222,19 @@ yum update
 Ahora instalaremos Apache con:
 
 \begin{lstlisting}
-yum install mysql-server
+yum install mariadb-server
 \end{lstlisting}
 
 Una vez instalado se puede lanzar usando:
 
 \begin{lstlisting}
-service mysqld start
+systemctl start mariadb
+\end{lstlisting}
+
+Para que se inicie el servicio cada vez que se inicie el sistema:
+
+\begin{lstlisting}
+systemctl enable mariadb
 \end{lstlisting}
 
 Una vez instalado podemos cargar la base de datos cargando el script que se encuentra en \url{https://github.com/fblupi/starsator-db} con la siguiente orden:
@@ -270,31 +243,89 @@ Una vez instalado podemos cargar la base de datos cargando el script que se encu
 mysql < stars.sql
 \end{lstlisting}
 
+\section{Servidor web}
+
+Usaremos otra máquina virtual con Centos 7 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPCentos7} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MariaDB pues, recordamos, esta primera máquina virtual solo contendrá el servidor web.
+\\ \\
+Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con:
+
+\begin{lstlisting}
+yum update
+\end{lstlisting}
+
+Ahora instalaremos Apache con:
+
+\begin{lstlisting}
+yum install httpd
+\end{lstlisting}
+
+Una vez instalado se puede lanzar usando:
+
+\begin{lstlisting}
+systemctl start httpd.service
+\end{lstlisting}
+
+Para que se inicie el servicio cada vez que se inicie el sistema:
+
+\begin{lstlisting}
+systemctl enable httpd.service
+\end{lstlisting}
+
+Ahora abrimos el puerto para permitir el tráfico por HTTP:
+
+\begin{lstlisting}
+firewall-cmd --permanent --zone=public --add-service=http
+firewall-cmd --reload
+\end{lstlisting}
+
+Por último instalamos PHP pues la aplicación web está desarrollada con esta tecnología. Para ello ejecutamos:
+
+\begin{lstlisting}
+yum install php php-mysql
+\end{lstlisting}
+
+Una vez instalado podemos cargar los fuentes en el directorio \texttt{/var/www/html/}. Yo los he obtenido clonando mi repositorio de GitHub donde están alojados: \url{https://github.com/fblupi/starsator-web}.
+
 \section{Conectar ambas máquinas virtuales}
 
 \subsection{SGBD}
+\label{sec:conectar-mvs-sgbd}
 
-Lo primero que hay que hacer es abrir el puerto 80 en la máquina donde se aloja el SGBD y asignárselo a MySQL para poder acceder externamente al servicio.
+Hay que realizar una serie de pasos para configurar el SGBD para que sea accesible desde una dirección IP remota \cite{EnableRemoteAccessToMariaDB}.
 \\ \\
-Para ello hay que abrir el puerto usando \texttt{iptables} \cite{OpenPortIptables} usando la orden:
-
+En primer lugar hay que dar acceso a la dirección IP remota:
+\\ \\
 \begin{lstlisting}
-iptables -I INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-service iptables save
+mysql
+GRANT ALL PRIVILEGES ON starsator.* TO 'web'@'192.168.10.XX' 
+  IDENTIFIED BY 'password' WITH GRANT OPTION;
+exit;
 \end{lstlisting}
 
-A continuación hay que editar el fichero \texttt{my.cnf} que se encuentra en \texttt{/etc} y agregarle las líneas: 
+Para ello hay que abrir el puerto usando \texttt{iptables} \cite{EnableRemoteAccessToMySQL} usando la orden:
 
 \begin{lstlisting}
-[client]
-port=80
+firewall-cmd --add-port=3306/tcp 
+firewall-cmd --permanent --add-port=3306/tcp
 \end{lstlisting}
 
 Y finalmente se reinicia el servicio: 
 
 \begin{lstlisting}
-service mysqld restart
+systemctl restart mariadb
 \end{lstlisting}
+
+\subsection{Servidor web}
+
+Para que nuestra aplicación web acceda a la base de datos del SGBD hay que editar el archivo \texttt{dbConnection.php} que se encuentra en \texttt{php/script} editando las siguientes variables \cite{PHPRemoteMySQLConnection}:
+
+\begin{itemize}
+	\item \texttt{servername}: Dirección IP en la red local de la máquina virtual donde se aloja el SGBD (192.168.10.XX).
+	\item \texttt{username}: Nombre de usuario al que hemos dado privilegios en la Sección \ref{sec:conectar-mvs-sgbd}. En nuestro caso le hemos llamado \texttt{web}.
+	\item \texttt{password}: Contraseña del usuario al que hemos dado privilegios en la Sección \ref{sec:conectar-mvs-sgbd}.
+	\item \texttt{dbname}: Nombre de la base de datos. En nuestro caso \texttt{starsator}.
+	\item \texttt{port}: Puerto por el que se conecta al servicio de base de datos. En nuestro caso \texttt{3306}.
+\end{itemize}
 
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
