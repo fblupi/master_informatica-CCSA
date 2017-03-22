@@ -101,7 +101,7 @@ oneuser login mccDNI-sin-LETRA --ssh --force
 Y con: 
 
 \begin{lstlisting}
-more .one/one\_auth
+more .one/one_auth
 \end{lstlisting}
 
 podemos obtener las credenciales para acceder a la plataforma desde la web \url{http://docker.ugr.es:9869}.
@@ -211,7 +211,7 @@ De aquí podemos obtener la dirección IP (\texttt{ETH0\_IP}) para conectarse po
 
 \section{SGBD}
 
-Usaremos la máquina virtual con CentOS 7 para alojar nuestro SGBD (MariaDB). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallMariaDBCentos7} con los que instalaremos MariaDB.
+Usaremos una máquina virtual con CentOS 7 para alojar nuestro SGBD (MariaDB). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallMariaDBCentos7} con los que instalaremos MariaDB.
 \\ \\
 Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con:
 
@@ -326,6 +326,16 @@ Para que nuestra aplicación web acceda a la base de datos del SGBD hay que edit
 	\item \texttt{dbname}: Nombre de la base de datos. En nuestro caso \texttt{starsator}.
 	\item \texttt{port}: Puerto por el que se conecta al servicio de base de datos. En nuestro caso \texttt{3306}.
 \end{itemize}
+
+\section{Aplicación web}
+
+Se ha desarrollado una aplicación web lo más simple posible, pues lo verdaderamente importante en esta práctica era el despliegue y conexión de máquinas virtuales.
+\\ \\
+La aplicación web solo permite consultar y añadir estrellas que podemos observar en el cielo nocturno almacenando su nombre y su distancia en años luz. Por tanto solo cuenta con una tabla: \texttt{Star(id, name, distance)}.
+\\ \\
+Como se ha mencionado anteriormente, y se puede intuir por lo que se ha instalado en cada máquina virtual, se utiliza SQL para la base de datos, PHP en el \textit{back-end} de la aplicación y HTML y CSS en el \textit{front-end} usando una plantilla de Bootstrap.
+
+\section{Conclusiones}
 
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
