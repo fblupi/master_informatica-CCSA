@@ -337,6 +337,12 @@ Como se ha mencionado anteriormente, y se puede intuir por lo que se ha instalad
 
 \section{Conclusiones}
 
+El objetivo de la práctica era el de desplegar dos máquinas virtuales con dos servicios independientes y conectarlas. En teoría podría parecer un trabajo sencillo, pero se ha acabado convirtiendo en una odisea con el comportamiento de OpenNebula.
+\\ \\
+Más allá de los comprensibles problemas de ralentización de la plataforma causada por las múltiples conexiones simultáneas durante las horas de prácticas donde todos estábamos conectados al mismo tiempo, se ha detectado otro más grave y es que la orden \texttt{onevm delete ID} no llega a funcionar del todo bien, pues se puede seguir accediendo a la máquina virtual borrada, ya que al volver a instanciar una máquina virtual y darle la IP de acceso de la máquina virtual que había anteriormente, llega un momento en el que esta máquina virtual nueva pasa al estado \texttt{poff} sin motivo aparente y no se puede volver a levantar con \texttt{onevm resume ID}, pues pasa al estado \texttt{boot} y de éste de nuevo al \texttt{poff}. Esto haría pensar que no se puede acceder a la máquina, pues está apagada. Pero no es así. Si se conecta mediante SSH a la dirección de esa máquina se accede, pero no a esa máquina sino a la que había anteriormente en esa dirección.
+\\ \\
+Este problema me llevó a tomar la decisión de desplegar ambos servicios en dos máquinas virtuales con el mismo sistema (CentOS 7) en lugar de en dos distintos (CentOS 6.5 y Ubuntu 14.04) pues me estaba haciendo un lío de en qué máquina estaba, si en la antigua o en la nueva, así, si veía que estaba en CentOS 7 sabía que estaba en la que debería funcionar bien.
+
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
 %----------------------------------------------------------------------------------------
