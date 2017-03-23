@@ -211,6 +211,8 @@ De aquí podemos obtener la dirección IP (\texttt{ETH0\_IP}) para conectarse po
 
 \section{SGBD}
 
+\subsection{CentOS 7}
+
 Usaremos una máquina virtual con CentOS 7 para alojar nuestro SGBD (MariaDB). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallMariaDBCentos7} con los que instalaremos MariaDB.
 \\ \\
 Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con:
@@ -245,7 +247,11 @@ mysql < stars.sql
 
 \section{Servidor web}
 
-Usaremos otra máquina virtual con Centos 7 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPCentos7} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MariaDB pues, recordamos, esta primera máquina virtual solo contendrá el servidor web.
+En esta sección se explicará como montar el servidor web tanto en CentOS 7 como en Ubuntu 14.04.
+
+\subsection{CentOS 7}
+
+Usaremos otra máquina virtual con CentOS 7 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPCentos7} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MariaDB pues, recordamos, esta máquina virtual solo contendrá el servidor web.
 \\ \\
 Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con:
 
@@ -286,7 +292,58 @@ yum install php php-mysql
 
 Una vez instalado podemos cargar los fuentes en el directorio \texttt{/var/www/html/}. Yo los he obtenido clonando mi repositorio de GitHub donde están alojados: \url{https://github.com/fblupi/starsator-web}.
 
+\subsection{Ubuntu 14.04}
+
+Alternativamente podemos usar una máquina virtual con Ubuntu 14.04 para alojar nuestro servidor web (Apache). Para ello seguiremos los pasos de un tutorial de DigitalOcean \cite{InstallLAMPUbuntu14.04} con los que instalaremos Apache y PHP e ignorando los pasos para instalar MySQL pues, recordamos, esta máquina virtual solo contendrá el servidor web.
+\\ \\
+Para comenzar nos conectamos a la máquina virtual mediante ssh con \texttt{ssh root@ETH0\_IP} y lo primero que haremos será actualizar el sistema con:
+
+\begin{lstlisting}
+apt-get update && apt-get upgrade
+\end{lstlisting}
+
+Ahora instalaremos Apache con:
+
+\begin{lstlisting}
+apt-get install apache2
+\end{lstlisting}
+
+Una vez instalado se puede lanzar usando:
+
+\begin{lstlisting}
+service apache2 start
+\end{lstlisting}
+
+A diferencia de CentOS, en Ubuntu ya tendremos por defecto abierto el puerto 80, por lo que no habrá que abrirlo manualmente.
+\\ \\
+Por último instalamos PHP pues la aplicación web está desarrollada con esta tecnología. Para ello ejecutamos:
+
+\begin{lstlisting}
+apt-get install php php-mysql
+\end{lstlisting}
+
+Para usar el \texttt{index.php} en lugar del \texttt{index.html} alojado en la raíz del servidor, hay que editar el fichero \texttt{/etc/apache2/mods-enabled/dir.conf} y dejarlo así:
+
+\begin{lstlisting}
+<IfModule mod_dir.c>
+  DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+</IfModule>
+\end{lstlisting}
+
+Una vez instalado podemos cargar los fuentes en el directorio \texttt{/var/www/html/}. Yo los he obtenido clonando mi repositorio de GitHub donde están alojados: \url{https://github.com/fblupi/starsator-web}.
+
 \section{Conectar ambas máquinas virtuales}
+
+Para acceder al puerto 80 de una de las máquinas virtuales dentro de \texttt{docker.ugr.es} tenemos que acceder por el puerto 150XX donde XX son los dos últimos dígitos de la dirección IP de la máquina virtual en la red privada.
+\\ \\
+Para acceder a la máquina virtual con el SGBD desde la del servidor web, al estar en la misma red privada, se podrá hacer directamente accediendo desde el puerto 3306.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=11cm]{img/esquema-red}
+	\caption{Esquema de conexiones de red}
+	\label{fig:esquema-red}
+\end{figure}
 
 \subsection{SGBD}
 \label{sec:conectar-mvs-sgbd}
@@ -302,7 +359,7 @@ GRANT ALL PRIVILEGES ON starsator.* TO 'web'@'192.168.10.XX'
 exit;
 \end{lstlisting}
 
-Para ello hay que abrir el puerto usando \texttt{iptables} \cite{EnableRemoteAccessToMySQL} usando la orden:
+Para ello hay que abrir el puerto usando la orden:
 
 \begin{lstlisting}
 firewall-cmd --add-port=3306/tcp 
@@ -327,6 +384,20 @@ Para que nuestra aplicación web acceda a la base de datos del SGBD hay que edit
 	\item \texttt{port}: Puerto por el que se conecta al servicio de base de datos. En nuestro caso \texttt{3306}.
 \end{itemize}
 
+Una vez hecho esto reiniciar Apache. 
+\\ \\
+En CentOS:
+
+\begin{lstlisting}
+systemctl restart httpd.service
+\end{lstlisting}
+
+y en Ubuntu:
+
+\begin{lstlisting}
+service apache2 restart
+\end{lstlisting}
+
 \section{Aplicación web}
 
 Se ha desarrollado una aplicación web lo más simple posible, pues lo verdaderamente importante en esta práctica era el despliegue y conexión de máquinas virtuales.
@@ -340,9 +411,6 @@ Como se ha mencionado anteriormente, y se puede intuir por lo que se ha instalad
 El objetivo de la práctica era el de desplegar dos máquinas virtuales con dos servicios independientes y conectarlas. En teoría podría parecer un trabajo sencillo, pero se ha acabado convirtiendo en una odisea con el comportamiento de OpenNebula.
 \\ \\
 Más allá de los comprensibles problemas de ralentización de la plataforma causada por las múltiples conexiones simultáneas durante las horas de prácticas donde todos estábamos conectados al mismo tiempo, se ha detectado otro más grave y es que la orden \texttt{onevm delete ID} no llega a funcionar del todo bien, pues se puede seguir accediendo a la máquina virtual borrada, ya que al volver a instanciar una máquina virtual y darle la IP de acceso de la máquina virtual que había anteriormente, llega un momento en el que esta máquina virtual nueva pasa al estado \texttt{poff} sin motivo aparente y no se puede volver a levantar con \texttt{onevm resume ID}, pues pasa al estado \texttt{boot} y de éste de nuevo al \texttt{poff}. Esto haría pensar que no se puede acceder a la máquina, pues está apagada. Pero no es así. Si se conecta mediante SSH a la dirección de esa máquina se accede, pero no a esa máquina sino a la que había anteriormente en esa dirección.
-\\ \\
-Este problema me llevó a tomar la decisión de desplegar ambos servicios en dos máquinas virtuales con el mismo sistema (CentOS 7) en lugar de en dos distintos (CentOS 6.5 y Ubuntu 14.04) pues me estaba haciendo un lío de en qué máquina estaba, si en la antigua o en la nueva, así, si veía que estaba en CentOS 7 sabía que estaba en la que debería funcionar bien.
-
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
 %----------------------------------------------------------------------------------------
