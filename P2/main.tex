@@ -1,0 +1,247 @@
+\input{estilo.tex}
+\usepackage{textcomp}
+\usepackage{hyperref}
+
+%----------------------------------------------------------------------------------------
+%	DATOS
+%----------------------------------------------------------------------------------------
+
+\newcommand{\myName}{Francisco Javier Bolívar Lupiáñez}
+\newcommand{\myDegree}{Máster en Ingeniería Informática}
+\newcommand{\myFaculty}{E. T. S. de Ingenierías Informática y de Telecomunicación}
+\newcommand{\myDepartment}{Ciencias de la Computación e Inteligencia Artificial}
+\newcommand{\myUniversity}{\protect{Universidad de Granada}}
+\newcommand{\myLocation}{Granada}
+\newcommand{\myTime}{\today}
+\newcommand{\myTitle}{Práctica 2}
+\newcommand{\mySubtitle}{Uso de contenedores (Docker)}
+\newcommand{\mySubject}{Cloud Computing: Servicios y Aplicaciones}
+\newcommand{\myYear}{2016-2017}
+
+%----------------------------------------------------------------------------------------
+%	PORTADA
+%----------------------------------------------------------------------------------------
+
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{\textbf{\mySubject \space (\myYear)} \\ \myDepartment} \\[20pt] % Your university, school and/or department name(s)
+	\textsc{\myDegree \\[10pt] \myFaculty \\ \myUniversity} \\[25pt]
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge \myTitle: \mySubtitle \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+	\normalfont \normalsize
+}
+
+\author{\myName} % Nombre y apellidos
+
+\date{\myTime} % Incluye la fecha actual
+%----------------------------------------------------------------------------------------
+%	INDICE
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+	
+\definecolor{light-gray}{gray}{0.95}
+	
+\lstset {
+	basicstyle=\scriptsize,
+	frame=single,
+	backgroundcolor=\color{grey}
+}
+
+\lstdefinestyle{PHP}{
+	frame=single,
+	numbers=left,
+	language=PHP,
+	basicstyle=\footnotesize,
+	keywordstyle=\bfseries,
+	commentstyle=\itshape,
+	identifierstyle=\bfseries,
+}
+	
+\setcounter{page}{0}
+
+\maketitle % Muestra el Título
+\thispagestyle{empty}
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+%\listoffigures
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\section{Introducción}
+
+El objetivo de esta práctica es familiarizarse con el uso de una plataforma PaaS y desarrollar habilidades de despliegue de contenedores y configurar aplicaciones sencillas en los mismos.
+\\ \\
+Para ello el alumno deberá realizar las tareas que se describen a continuación y entregar documentación describiendo con el mayor detalle posible todas las actividades realizadas.
+\\ \\
+Dentro de la plataforma de prácticas habilitada para la asignatura, DOCKER, accesible a través de hadoop.ugr.es (vía ssh), cada alumno deberá:
+
+\begin{itemize}
+	\item Crear un contenedor (A) con APACHE, SSL y PHP5.
+	\begin{itemize}
+		\item ¿Cuál es el puerto SSL?
+		\item ¿Cómo redirigir el puerto SSL a vuestro puerto asignado?
+	\end{itemize}
+	\item Crear un contenedor (B) con MySQL.
+	\item Crear una página en el servidor web (A) que se conecte al servicio MySQL en el contenedor (B).
+	\item Duplicar los contenedores A y B y discutir o mostrar qué pasaría si uno de ellos cayese.
+	\item Desplegar un servicio OwnCloud o NewCloud en otro contenedor (o eliminar alguno de los ya utilizados) y chequear su correcto funcionamiento almacenando archivos.
+	\item Elaborar un breve documento detallando todo el trabajo realizado.
+\end{itemize}
+
+\label{sec:conexion}
+\subsection{Contenedor para la web}
+
+Para la aplicación web, como ya se hizo en la práctica anterior, se hará uso de Apache, PHP y MySQL (MariaDB).
+\\ \\
+Para ello se crearán dos contenedores, uno con MariaDB y otro con Apache y PHP5 \cite{DockerPHPMySQL} \cite{DockerMariaDB}.
+\\ \\
+Lo primero que hay que hacer es descargar los contenedores que se utilizarán:
+
+\begin{lstlisting}
+docker pull nimmis/apache-php5
+docker pull mariadb
+\end{lstlisting}
+
+Una vez descargados, se podrán crear los dos contenedores, enlazando el de la base de datos al de la web:
+
+\begin{lstlisting}
+docker run -d -p PORT:3306 --name fblupi-db -e MYSQL_ROOT_PASSWORD=PWD mariadb
+docker run -d -p PORT:80 --name fblupi-web --link fblupi-db:db nimmis/apache-php5 
+\end{lstlisting}
+
+Si accedemos al servidor web podremos ver la página de inicio de Apache, ahora hay que instalar tanto la base de datos como la aplicación.
+
+\subsection{Base de datos}
+
+Accedemos a una terminal del contenedor:
+
+\begin{lstlisting}
+docker exec -i -t fblupi-db bash
+\end{lstlisting}
+
+Lo primero que habrá que hacer es instalar git para poder descargar el script de creación de la base de datos:
+
+\begin{lstlisting}
+apt-get update -y && apt-get install git -y
+\end{lstlisting}
+
+Una vez descargado git, nos descargamos el repositorio con el script:
+
+\begin{lstlisting}
+git clone https://github.com/fblupi/starsator-db
+\end{lstlisting}
+
+Agregamos la base de datos:
+
+\begin{lstlisting}
+mysql -u root -p < starsator-db/stars.sql
+\end{lstlisting}
+
+Y eliminamos el repositorio clonado para liberar espacio ya innecesario:
+
+\begin{lstlisting}
+rm -r starsator-db
+\end{lstlisting}
+
+\subsection{Aplicación web}
+
+Accedemos a una terminal del contenedor:
+
+\begin{lstlisting}
+docker exec -i -t fblupi-web bash
+\end{lstlisting}
+
+Lo primero que habrá que hacer es instalar git para poder descargar la aplicación web:
+
+\begin{lstlisting}
+apt-get update -y && apt-get install git -y
+\end{lstlisting}
+
+Nos dirigimos al directorio donde colocar la aplicación web:
+
+\begin{lstlisting}
+cd /var/www/html
+\end{lstlisting}
+
+Eliminamos la web por defecto de apache:
+
+\begin{lstlisting}
+rm index.html
+\end{lstlisting}
+
+Descargamos el repositorio con la web:
+
+\begin{lstlisting}
+git clone https://github.com/fblupi/starsator-web
+\end{lstlisting}
+
+Movemos a la raíz del directorio web:
+
+\begin{lstlisting}
+mv starsator-web/* .
+\end{lstlisting}
+
+Eliminamos el directorio de la aplicación web, ya innecesario, para liberar espacio:
+
+\begin{lstlisting}
+rm -r starsator-web
+\end{lstlisting}
+
+Y editamos el fichero de conexión a la base de datos para enlazar al contenedor creado anteriormente:
+
+\begin{lstlisting}
+nano php/script/dbConnection.php
+\end{lstlisting}
+
+Para ello hay que dejar el fichero así:
+
+\begin{lstlisting}[style=PHP]
+<?php
+
+function dbConnect() {
+$servername = "db";
+$username   = "root";
+$password   = "star";
+$dbname     = "starsator";
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+if (!$conn) {
+  die("Connection failed: " . mysqli_connect_error());
+}
+
+return $conn;
+}
+
+?>
+\end{lstlisting}
+
+Y por último, reiniciamos el servidor web:
+
+\begin{lstlisting}
+service apache2 restart
+\end{lstlisting}
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	REFERENCIAS
+%----------------------------------------------------------------------------------------
+
+\newpage
+
+\bibliography{referencias} %archivo referencias.bib que contiene las entradas 
+\bibliographystyle{plain} % hay varias formas de citar
+
+\end{document}
