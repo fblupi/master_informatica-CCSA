@@ -98,8 +98,15 @@ Dentro de la plataforma de prácticas habilitada para la asignatura, DOCKER, acc
 	\item Elaborar un breve documento detallando todo el trabajo realizado.
 \end{itemize}
 
-\label{sec:conexion}
-\subsection{Contenedor para la web}
+\section{Descripción de la aplicación web}
+
+Se ha desarrollado una aplicación web lo más simple posible, pues lo verdaderamente importante en esta práctica era el despliegue y conexión de máquinas virtuales.
+\\ \\
+La aplicación web solo permite consultar y añadir estrellas que podemos observar en el cielo nocturno almacenando su nombre y su distancia en años luz. Por tanto solo cuenta con una tabla: \texttt{Star(id, name, distance)}.
+\\ \\
+Como se ha mencionado anteriormente, y se puede intuir por lo que se ha instalado en cada máquina virtual, se utiliza SQL para la base de datos, PHP en el \textit{back-end} de la aplicación y HTML y CSS en el \textit{front-end} usando una plantilla de Bootstrap.
+
+\section{Contenedores para la web}
 
 Para la aplicación web, como ya se hizo en la práctica anterior, se hará uso de Apache, PHP y MySQL (MariaDB).
 \\ \\
@@ -232,8 +239,42 @@ Y por último, reiniciamos el servidor web:
 service apache2 restart
 \end{lstlisting}
 
+\section{Contenedores para OwnCloud}
 
+Para instalar OwnCloud se usarán dos contenedores, uno que contendrá la base de datos en Postgres y el que contendrá la aplicación en sí \cite{DockerOwnCloud}.
+\\ \\
+Lo primero que hay que hacer es descargar los contenedores que se utilizarán:
 
+\begin{lstlisting}
+docker pull owncloud
+docker pull postgres
+\end{lstlisting}
+
+Una vez descargados, se podrán crear los dos contenedores, enlazando el de la base de datos al de la web:
+
+\begin{lstlisting}
+docker run -d --name fblupi-owncloud-postgres -e POSTGRES_PASSWORD=PWD postgres
+docker run -d -p PORT:80 --name fblupi-owncloud --link fblupi-owncloud-postgres:db
+ owncloud
+\end{lstlisting}
+
+Accedemos a OwnCloud por hadoop.ugr.es y el puerto asignado y configuramos el usuario y la base de datos utilizando la contraseña que hemos dado al contenedor de Postgre y los datos que aparecen en la siguiente imagen (Figura \ref{fig:owncloud-config}):
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=7cm]{img/owncloud-config}
+	\caption{Configurando OwnCloud}
+	\label{fig:owncloud-config}
+\end{figure}
+
+Una vez hecho esto se puede empezar a almacenar ficheros (Figura \ref{fig:owncloud-uploaded-file}):
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=14cm]{img/owncloud-uploaded-file}
+	\caption{Imagen subida a OwnCloud con éxito}
+	\label{fig:owncloud-uploaded-file}
+\end{figure}
 
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
