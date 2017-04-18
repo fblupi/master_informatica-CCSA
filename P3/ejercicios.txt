@@ -1,0 +1,22 @@
+1.1.
+load('/home/insertar_pedidos.js')
+db.pedidos.find().pretty()
+1.2.
+db.pedidos.findOne()
+db.pedidos.find().limit(1).pretty()
+1.3.
+db.pedidos.find({"id_cliente": 2222}).pretty()
+1.4.
+db.pedidos.find({"Pedidos.Productos.Precio_unidad": {$gt: 94}}).pretty()
+1.5.
+db.pedidos.find({$or:[{"Localidad": "Salamanca"}, {"Localidad": "Jaen"}]}, {"Pedidos": 0}).pretty()
+db.pedidos.find({"Localidad": {$in: ["Salamanca", "Jaen"]}}, {"Pedidos": 0}).pretty()
+1.6.
+db.pedidos.find({"Pedidos": {$exists: false}}).pretty()
+1.7.
+db.pedidos.find({"Fnacimiento": {$gte: new Date(1963, 1, 1), $lt: new Date(1964, 1, 1)}}).pretty()
+1.8. ESTÁ MAL
+db.pedidos.find({$and:[{"Pedidos.Productos.Fabricante": "Canon"}, {"Pedidos.Productos.Precio_unidad": {$lt: 15}}]}).pretty() 
+1.9.
+1.10.
+1.11.
