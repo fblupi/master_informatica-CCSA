@@ -7,6 +7,7 @@ db.pedidos.count()
 db.pedidos.find({"Localidad": "Jaen"}).count()
 
 // 3. Facturación total de clientes por localidad
+db.pedidos.aggregate([{$group: {"_id": "$Localidad", facturacion_total: {$sum : "$Facturacion"}}}])
 
 // 4. Facturación media de clientes por localidad para las localidades distintas a "Jaen" con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
 
