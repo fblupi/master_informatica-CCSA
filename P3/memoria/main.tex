@@ -1047,14 +1047,46 @@ db.pedidos.aggregate(
 
 \subsection{Ejercicio 4}
 
-4. Facturación media de clientes por localidad para las localidades distintas a \texttt{"Jaen"} con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el \texttt{\_id} y poner el nombre en mayúsculas
+Facturación media de clientes por localidad para las localidades distintas a \texttt{"Jaen"} con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el \texttt{\_id} y poner el nombre en mayúsculas
 
 \begin{lstlisting}
-
+db.pedidos.aggregate(
+  [
+    {
+      $group: 
+      {
+        "_id": "$Localidad", 
+        facturacion_media: {$avg: "$Facturacion"}
+      }
+    }, 
+    {
+      $match: 
+      {
+        "_id": {$ne: "Jaen"}, 
+        facturacion_media: {$gt: 5000}
+      }
+    }, 
+    {
+      $sort: 
+      {
+        "_id": -1
+      }
+    },
+    {
+      $project:
+      {
+        "_id": 0,
+        "Localidad": {$toUpper: "$_id"},
+        "facturacion_media": 1
+      }
+    }
+  ]
+);
 \end{lstlisting}
 
 \begin{lstlisting}
-
+{ "facturacion_media" : 6500, "Localidad" : "SALAMANCA" }
+{ "facturacion_media" : 10750, "Localidad" : "GRANADA" }
 \end{lstlisting}
 
 \subsection{Ejercicio 5}
