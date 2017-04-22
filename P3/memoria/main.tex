@@ -1,0 +1,1163 @@
+\input{estilo.tex}
+\usepackage{textcomp}
+\usepackage{hyperref}
+
+%----------------------------------------------------------------------------------------
+%	DATOS
+%----------------------------------------------------------------------------------------
+
+\newcommand{\myName}{Francisco Javier Bolívar Lupiáñez}
+\newcommand{\myDegree}{Máster en Ingeniería Informática}
+\newcommand{\myFaculty}{E. T. S. de Ingenierías Informática y de Telecomunicación}
+\newcommand{\myDepartment}{Ciencias de la Computación e Inteligencia Artificial}
+\newcommand{\myUniversity}{\protect{Universidad de Granada}}
+\newcommand{\myLocation}{Granada}
+\newcommand{\myTime}{\today}
+\newcommand{\myTitle}{Práctica 3}
+\newcommand{\mySubtitle}{Bases de datos NoSQL}
+\newcommand{\mySubject}{Cloud Computing: Servicios y Aplicaciones}
+\newcommand{\myYear}{2016-2017}
+
+%----------------------------------------------------------------------------------------
+%	PORTADA
+%----------------------------------------------------------------------------------------
+
+
+\title{	
+	\normalfont \normalsize 
+	\textsc{\textbf{\mySubject \space (\myYear)} \\ \myDepartment} \\[20pt] % Your university, school and/or department name(s)
+	\textsc{\myDegree \\[10pt] \myFaculty \\ \myUniversity} \\[25pt]
+	\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+	\huge \myTitle: \mySubtitle \\ % The assignment title
+	\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+	\normalfont \normalsize
+}
+
+\author{\myName} % Nombre y apellidos
+
+\date{\myTime} % Incluye la fecha actual
+%----------------------------------------------------------------------------------------
+%	INDICE
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+	
+\lstset {
+	basicstyle=\scriptsize,
+	frame=single,
+	backgroundcolor=\color{grey},
+	breaklines=true
+}
+	
+\setcounter{page}{0}
+
+\maketitle % Muestra el Título
+\thispagestyle{empty}
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+%\listoffigures
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\section{Introducción}
+
+El objetivo de esta práctica es familiarizarse con el uso de un sistema de gestión de bases de datos en entornos Big Data. Para ello, haremos uso de la aplicación más conocida como es MongoDB.
+\\ \\
+Para constatar el manejo de la herramienta anterior, el alumno deberá las realizar tareas que se describen a continuación y entregawr documentación escribiendo las tareas realizadas.
+
+\section{Objetivo nº 1. Consulta de Documentos}
+
+Crear la colección \texttt{pedidos} en cada BD asociada a vuestro usuario, sobre la que se realizarán diversas operaciones CRUD. Para crear la colección abre y ejecuta el script \texttt{insertar\_pedidos.js} (accesible en \texttt{/tmp/mongo}). Las tareas a realizar son las siguientes:
+
+\subsection{Ejercicio 1}
+
+Visualiza la colección \texttt{pedidos} y familiarízate con ella. Observa los distintos tipos de datos y sus estructuras dispares
+
+\begin{lstlisting}
+db.pedidos.find().pretty()
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "_id" : ObjectId("58f64cf627193f23545c3e70"),
+  "id_cliente" : 1111,
+  "Nombre" : "Pedro Ramirez",
+  "Direccion" : "Calle Los Romeros 14",
+  "Localidad" : "Sevilla",
+  "Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+  "Facturacion" : 5000,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 390,
+          "Cantidad" : 1
+        },
+        {
+          "id_producto" : 2,
+          "Nombre" : "Tablet 8 pulgadas",
+          "Precio_unidad" : 95,
+          "Cantidad" : 1
+        }
+      ]
+    },
+    {
+      "id_pedido" : 2,
+      "Productos" : [
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 115,
+          "Cantidad" : 3
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e71"),
+  "id_cliente" : 2222,
+  "Nombre" : "Juan Gomez",
+  "Direccion" : "Perpetuo Socorro 9",
+  "Localidad" : "Salamanca",
+  "Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+  "Facturacion" : 6500,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 100,
+          "Cantidad" : 1
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 455,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 27,
+          "Nombre" : "Cable USB",
+          "Precio_unidad" : 11,
+          "Cantidad" : 12
+        }
+      ]
+    },
+    {
+      "id_pedido" : 2,
+      "Productos" : [
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 128,
+          "Cantidad" : 3
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 451,
+          "Cantidad" : 5
+        },
+        {
+          "id_producto" : 21,
+          "Nombre" : "Disco Duro 500GB",
+          "Precio_unidad" : 99,
+          "Cantidad" : 10
+        }
+      ]
+    },
+    {
+      "id_pedido" : 3,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 94,
+          "Cantidad" : 5
+        },
+        {
+          "id_producto" : 95,
+          "Nombre" : "SAI 5H Mod. 258",
+          "Precio_unidad" : 213,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 21,
+          "Precio_unidad" : 66,
+          "Nombre" : "Disco Duro 500GB",
+          "Cantidad" : 10
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e72"),
+  "id_cliente" : 3333,
+  "Nombre" : "Carlos Montes",
+  "Direccion" : "Salsipuedes 13",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+  "Facturacion" : 8000
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e73"),
+  "id_cliente" : 4444,
+  "Nombre" : "Carmelo Coton",
+  "Direccion" : "La Luna 103",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+  "Facturacion" : 12300
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e74"),
+  "id_cliente" : 5555,
+  "Nombre" : "Cristina Miralles",
+  "Direccion" : "San Fernando 28",
+  "Localidad" : "Granada",
+  "Fnacimiento" : ISODate("1970-07-12T00:00:00Z"),
+  "Facturacion" : 16500,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 95,
+          "Nombre" : "SAI 5H Mod. 258",
+          "Precio_unidad" : 211,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Precio_unidad" : 460,
+          "Fabricante" : "Intel",
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 119,
+          "Cantidad" : 2
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e75"),
+  "id_cliente" : 6666,
+  "Nombre" : "Chema Pamundi",
+  "Direccion" : "Recogidas 54",
+  "Localidad" : "Granada",
+  "Fnacimiento" : ISODate("1969-02-04T00:00:00Z"),
+  "Facturacion" : 5000
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e76"),
+  "id_cliente" : 777,
+  "Nombre" : "Alberto Matero",
+  "Direccion" : "Pelayo 4",
+  "Localidad" : "Sevilla",
+  "Facturacion" : 2500,
+  "Pedidos" : null
+}
+\end{lstlisting}
+
+\subsection{Ejercicio 2}
+
+Visualiza sólo el primer documento de la colección. Utiliza los métodos \texttt{.limit()} y \texttt{.findOne()}
+
+\begin{lstlisting}
+db.pedidos.findOne();
+// o
+db.pedidos.find().limit(1).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "_id" : ObjectId("58f64cf627193f23545c3e70"),
+  "id_cliente" : 1111,
+  "Nombre" : "Pedro Ramirez",
+  "Direccion" : "Calle Los Romeros 14",
+  "Localidad" : "Sevilla",
+  "Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+  "Facturacion" : 5000,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 390,
+          "Cantidad" : 1
+        },
+        {
+          "id_producto" : 2,
+          "Nombre" : "Tablet 8 pulgadas",
+          "Precio_unidad" : 95,
+          "Cantidad" : 1
+        }
+      ]
+    },
+    {
+      "id_pedido" : 2,
+      "Productos" : [
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 115,
+          "Cantidad" : 3
+        }
+      ]
+    }
+  ]
+}	
+\end{lstlisting}
+
+\subsection{Ejercicio 3}
+
+Visualiza el cliente con \texttt{id\_cliente = 2222}
+
+\begin{lstlisting}
+db.pedidos.find(
+  {"id_cliente": 2222}
+).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e71"),
+  "id_cliente" : 2222,
+  "Nombre" : "Juan Gomez",
+  "Direccion" : "Perpetuo Socorro 9",
+  "Localidad" : "Salamanca",
+  "Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+  "Facturacion" : 6500,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 100,
+          "Cantidad" : 1
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 455,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 27,
+          "Nombre" : "Cable USB",
+          "Precio_unidad" : 11,
+          "Cantidad" : 12
+        }
+      ]
+    },
+    {
+      "id_pedido" : 2,
+      "Productos" : [
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 128,
+          "Cantidad" : 3
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 451,
+          "Cantidad" : 5
+        },
+        {
+          "id_producto" : 21,
+          "Nombre" : "Disco Duro 500GB",
+          "Precio_unidad" : 99,
+          "Cantidad" : 10
+        }
+      ]
+    },
+    {
+      "id_pedido" : 3,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 94,
+          "Cantidad" : 5
+        },
+        {
+          "id_producto" : 95,
+          "Nombre" : "SAI 5H Mod. 258",
+          "Precio_unidad" : 213,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 21,
+          "Precio_unidad" : 66,
+          "Nombre" : "Disco Duro 500GB",
+          "Cantidad" : 10
+        }
+      ]
+    }
+  ]
+}
+	
+\end{lstlisting}
+
+\subsection{Ejercicio 4}
+
+Visualiza los clientes que hayan pedido algún producto de más de 94 euros
+
+\begin{lstlisting}
+db.pedidos.find(
+  {"Pedidos.Productos.Precio_unidad": {$gt: 94}}
+).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "_id" : ObjectId("58f64cf627193f23545c3e70"),
+  "id_cliente" : 1111,
+  "Nombre" : "Pedro Ramirez",
+  "Direccion" : "Calle Los Romeros 14",
+  "Localidad" : "Sevilla",
+  "Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+  "Facturacion" : 5000,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 390,
+          "Cantidad" : 1
+        },
+        {
+          "id_producto" : 2,
+          "Nombre" : "Tablet 8 pulgadas",
+          "Precio_unidad" : 95,
+          "Cantidad" : 1
+        }
+      ]
+    },
+    {
+      "id_pedido" : 2,
+      "Productos" : [
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 115,
+          "Cantidad" : 3
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e71"),
+  "id_cliente" : 2222,
+  "Nombre" : "Juan Gomez",
+  "Direccion" : "Perpetuo Socorro 9",
+  "Localidad" : "Salamanca",
+  "Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+  "Facturacion" : 6500,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 100,
+          "Cantidad" : 1
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 455,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 27,
+          "Nombre" : "Cable USB",
+          "Precio_unidad" : 11,
+          "Cantidad" : 12
+        }
+      ]
+    },
+    {
+      "id_pedido" : 2,
+      "Productos" : [
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 128,
+          "Cantidad" : 3
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 451,
+          "Cantidad" : 5
+        },
+        {
+          "id_producto" : 21,
+          "Nombre" : "Disco Duro 500GB",
+          "Precio_unidad" : 99,
+          "Cantidad" : 10
+        }
+      ]
+    },
+    {
+      "id_pedido" : 3,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 94,
+          "Cantidad" : 5
+        },
+        {
+          "id_producto" : 95,
+          "Nombre" : "SAI 5H Mod. 258",
+          "Precio_unidad" : 213,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 21,
+          "Precio_unidad" : 66,
+          "Nombre" : "Disco Duro 500GB",
+          "Cantidad" : 10
+        }
+      ]
+    }
+  ]
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e74"),
+  "id_cliente" : 5555,
+  "Nombre" : "Cristina Miralles",
+  "Direccion" : "San Fernando 28",
+  "Localidad" : "Granada",
+  "Fnacimiento" : ISODate("1970-07-12T00:00:00Z"),
+  "Facturacion" : 16500,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 95,
+          "Nombre" : "SAI 5H Mod. 258",
+          "Precio_unidad" : 211,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Precio_unidad" : 460,
+          "Fabricante" : "Intel",
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 119,
+          "Cantidad" : 2
+        }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsection{Ejercicio 5}
+
+Visualiza los clientes de Jaén o Salamanca (excluye los datos de los pedidos). Utiliza los operador \texttt{\$or} e \texttt{\$in}
+
+\begin{lstlisting}
+db.pedidos.find(
+  {$or:[{"Localidad": "Salamanca"}, {"Localidad": "Jaen"}]}, 
+  {"Pedidos": 0}
+).pretty();
+// o
+db.pedidos.find(
+  {"Localidad": {$in: ["Salamanca", "Jaen"]}}, 
+  {"Pedidos": 0}
+).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e71"),
+  "id_cliente" : 2222,
+  "Nombre" : "Juan Gomez",
+  "Direccion" : "Perpetuo Socorro 9",
+  "Localidad" : "Salamanca",
+  "Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+  "Facturacion" : 6500
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e72"),
+  "id_cliente" : 3333,
+  "Nombre" : "Carlos Montes",
+  "Direccion" : "Salsipuedes 13",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+  "Facturacion" : 8000
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e73"),
+  "id_cliente" : 4444,
+  "Nombre" : "Carmelo Coton",
+  "Direccion" : "La Luna 103",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+  "Facturacion" : 12300
+}
+\end{lstlisting}
+
+\subsection{Ejercicio 6}
+
+Visualiza los clientes no tienen campo \texttt{pedidos}
+
+\begin{lstlisting}
+db.pedidos.find(
+  {"Pedidos": {$exists: false}}
+).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e72"),
+  "id_cliente" : 3333,
+  "Nombre" : "Carlos Montes",
+  "Direccion" : "Salsipuedes 13",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+  "Facturacion" : 8000
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e73"),
+  "id_cliente" : 4444,
+  "Nombre" : "Carmelo Coton",
+  "Direccion" : "La Luna 103",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+  "Facturacion" : 12300
+}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e75"),
+  "id_cliente" : 6666,
+  "Nombre" : "Chema Pamundi",
+  "Direccion" : "Recogidas 54",
+  "Localidad" : "Granada",
+  "Fnacimiento" : ISODate("1969-02-04T00:00:00Z"),
+  "Facturacion" : 5000
+}
+\end{lstlisting}
+
+\subsection{Ejercicio 7}
+
+Visualiza los clientes que hayan nacido en 1963
+
+\begin{lstlisting}
+db.pedidos.find(
+  {"Fnacimiento": {$gte: new Date(1963, 1, 1), $lt: new Date(1964, 1, 1)}}
+).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "_id" : ObjectId("58f64cf627193f23545c3e70"),
+  "id_cliente" : 1111,
+  "Nombre" : "Pedro Ramirez",
+  "Direccion" : "Calle Los Romeros 14",
+  "Localidad" : "Sevilla",
+  "Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+  "Facturacion" : 5000,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 390,
+          "Cantidad" : 1
+        },
+        {
+          "id_producto" : 2,
+          "Nombre" : "Tablet 8 pulgadas",
+          "Precio_unidad" : 95,
+          "Cantidad" : 1
+        }
+      ]
+    },
+    {
+      "id_pedido" : 2,
+      "Productos" : [
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 115,
+          "Cantidad" : 3
+        }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsection{Ejercicio 8}
+
+Visualiza los clientes que hayan pedido algún producto fabricado por Canon y algún producto cuyo precio sea inferior a 15 euros
+
+\begin{lstlisting}
+db.pedidos.find(
+  {"Pedidos.Productos.Fabricante": "Canon", 
+  "Pedidos.Productos.Precio_unidad": {$lt: 15}}
+).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "_id" : ObjectId("58f64cf727193f23545c3e71"),
+  "id_cliente" : 2222,
+  "Nombre" : "Juan Gomez",
+  "Direccion" : "Perpetuo Socorro 9",
+  "Localidad" : "Salamanca",
+  "Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+  "Facturacion" : 6500,
+  "Pedidos" : [
+    {
+      "id_pedido" : 1,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 100,
+          "Cantidad" : 1
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 455,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 27,
+          "Nombre" : "Cable USB",
+          "Precio_unidad" : 11,
+          "Cantidad" : 12
+        }
+      ]
+    },
+    {
+      "id_pedido" : 2,
+      "Productos" : [
+        {
+          "id_producto" : 77,
+          "Nombre" : "Impresora Laser",
+          "Fabricante" : "Canon",
+          "Precio_unidad" : 128,
+          "Cantidad" : 3
+        },
+        {
+          "id_producto" : 42,
+          "Nombre" : "Portatil ASM Mod. 254",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 451,
+          "Cantidad" : 5
+        },
+        {
+          "id_producto" : 21,
+          "Nombre" : "Disco Duro 500GB",
+          "Precio_unidad" : 99,
+          "Cantidad" : 10
+        }
+      ]
+    },
+    {
+      "id_pedido" : 3,
+      "Productos" : [
+        {
+          "id_producto" : 1,
+          "Nombre" : "Pentium IV",
+          "Fabricante" : "Intel",
+          "Precio_unidad" : 94,
+          "Cantidad" : 5
+        },
+        {
+          "id_producto" : 95,
+          "Nombre" : "SAI 5H Mod. 258",
+          "Precio_unidad" : 213,
+          "Cantidad" : 2
+        },
+        {
+          "id_producto" : 21,
+          "Precio_unidad" : 66,
+          "Nombre" : "Disco Duro 500GB",
+          "Cantidad" : 10
+        }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsection{Ejercicio 9}
+
+Datos personales (id\_cliente, Nombre, Direccion, Localidad y Fnacimiento) de los clientes cuyo nombre empieza por la cadena "c" (No distinguir entre mayusculas y minúsculas)
+
+\begin{lstlisting}
+db.pedidos.find(
+  {"Nombre": /^c/i}, 
+  {"_id": 0, "id_cliente": 1, "Nombre": 1, "Direccion": 1, "Localidad": 1, 
+  "Fnacimiento": 1,}
+).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "id_cliente" : 3333,
+  "Nombre" : "Carlos Montes",
+  "Direccion" : "Salsipuedes 13",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1967-11-25T00:00:00Z")
+}
+{
+  "id_cliente" : 4444,
+  "Nombre" : "Carmelo Coton",
+  "Direccion" : "La Luna 103",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1969-01-06T00:00:00Z")
+}
+{
+  "id_cliente" : 5555,
+  "Nombre" : "Cristina Miralles",
+  "Direccion" : "San Fernando 28",
+  "Localidad" : "Granada",
+  "Fnacimiento" : ISODate("1970-07-12T00:00:00Z")
+}
+{
+  "id_cliente" : 6666,
+  "Nombre" : "Chema Pamundi",
+  "Direccion" : "Recogidas 54",
+  "Localidad" : "Granada",
+  "Fnacimiento" : ISODate("1969-02-04T00:00:00Z")
+}
+\end{lstlisting}
+
+\subsection{Ejercicio 10}
+
+Visualiza los datos personales de los clientes (excluyendo \texttt{\_id}). Limita los documentos a 4
+
+\begin{lstlisting}
+db.pedidos.find(
+  {}, 
+  {"Pedidos": 0, "_id": 0}
+).limit(4).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "id_cliente" : 1111,
+  "Nombre" : "Pedro Ramirez",
+  "Direccion" : "Calle Los Romeros 14",
+  "Localidad" : "Sevilla",
+  "Fnacimiento" : ISODate("1963-04-03T00:00:00Z"),
+  "Facturacion" : 5000
+}
+{
+  "id_cliente" : 2222,
+  "Nombre" : "Juan Gomez",
+  "Direccion" : "Perpetuo Socorro 9",
+  "Localidad" : "Salamanca",
+  "Fnacimiento" : ISODate("1960-08-17T00:00:00Z"),
+  "Facturacion" : 6500
+}
+{
+  "id_cliente" : 3333,
+  "Nombre" : "Carlos Montes",
+  "Direccion" : "Salsipuedes 13",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+  "Facturacion" : 8000
+}
+{
+  "id_cliente" : 4444,
+  "Nombre" : "Carmelo Coton",
+  "Direccion" : "La Luna 103",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+  "Facturacion" : 12300
+}
+\end{lstlisting}
+
+\subsection{Ejercicio 11}
+
+Ídem anterior pero ordenando los documentos por Localidad (ascendente) e \texttt{id\_cliente} (descendente)
+
+\begin{lstlisting}
+db.pedidos.find(
+  {}, 
+  {"Pedidos": 0, "_id": 0}
+).sort(
+  {"Localidad": 1, "id_cliente": -1}
+).limit(4).pretty();
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "id_cliente" : 6666,
+  "Nombre" : "Chema Pamundi",
+  "Direccion" : "Recogidas 54",
+  "Localidad" : "Granada",
+  "Fnacimiento" : ISODate("1969-02-04T00:00:00Z"),
+  "Facturacion" : 5000
+}
+{
+  "id_cliente" : 5555,
+  "Nombre" : "Cristina Miralles",
+  "Direccion" : "San Fernando 28",
+  "Localidad" : "Granada",
+  "Fnacimiento" : ISODate("1970-07-12T00:00:00Z"),
+  "Facturacion" : 16500
+}
+{
+  "id_cliente" : 4444,
+  "Nombre" : "Carmelo Coton",
+  "Direccion" : "La Luna 103",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1969-01-06T00:00:00Z"),
+  "Facturacion" : 12300
+}
+{
+  "id_cliente" : 3333,
+  "Nombre" : "Carlos Montes",
+  "Direccion" : "Salsipuedes 13",
+  "Localidad" : "Jaen",
+  "Fnacimiento" : ISODate("1967-11-25T00:00:00Z"),
+  "Facturacion" : 8000
+}
+
+\end{lstlisting}
+
+\section{Objetivo nº 2. Agregación}
+
+A partir de la colección \texttt{pedidos} utilizaremos consultas más complejas por medio de los operadores de agregación (pipeline). Por facilidad se indica la consulta en formato SQL estándar. Las tareas a realizar en este caso obtener:
+
+\subsection{Ejercicio 1}
+
+Nº total de clientes
+
+\begin{lstlisting}
+db.pedidos.count();
+\end{lstlisting}
+
+\begin{lstlisting}
+7
+\end{lstlisting}
+
+\subsection{Ejercicio 2}
+
+Nº total de clientes de Jaén
+
+\begin{lstlisting}
+db.pedidos.find(
+  {"Localidad": "Jaen"}
+).count();
+\end{lstlisting}
+
+\begin{lstlisting}
+2
+\end{lstlisting}
+
+\subsection{Ejercicio 3}
+
+Facturación total clientes por localidad
+
+\begin{lstlisting}
+db.pedidos.aggregate(
+  [
+    {
+      $group: 
+      {
+        "_id": "$Localidad", 
+        facturacion_total: {$sum: "$Facturacion"}
+      }
+    }
+  ]
+);
+\end{lstlisting}
+
+\begin{lstlisting}
+{ "_id" : "Granada", "facturacion_total" : 21500 }
+{ "_id" : "Jaen", "facturacion_total" : 20300 }
+{ "_id" : "Salamanca", "facturacion_total" : 6500 }
+{ "_id" : "Sevilla", "facturacion_total" : 7500 }
+\end{lstlisting}
+
+\subsection{Ejercicio 4}
+
+4. Facturación media de clientes por localidad para las localidades distintas a \texttt{"Jaen"} con facturación media mayor de 5000. Ordenación por Localidad descendente. Eliminar el \texttt{\_id} y poner el nombre en mayúsculas
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\subsection{Ejercicio 5}
+
+Calcula la cantidad total facturada por cada cliente (uso de "unwind")
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\section{Objetivo nº 3. MapReduce}
+
+Vamos a utilizar la base de datos libre GeoWorldMap de GeoBytes. Es una base de datos de países, con sus estados/regiones y ciudades importantes. Sobre esta base de datos vamos a obtener el par de ciudades que se encuentran más cercanas de cada país, excluyendo a los EEUU.
+\\ \\
+Vamos a importar en nuestra BD de MongoDB un archivo de 37245 ciudades del mundo que está en formato csv (\texttt{/tmp/mongo/Cities.csv})
+
+\begin{lstlisting}
+mongoimport -u <user> -p <clave> --db <bd> --collection cities --type csv --headerline --file /home/Cities.csv
+\end{lstlisting}
+
+\subsection{Ejercicio 1}
+
+Encontrar las ciudades más cercanas sobre la colección recién creada mediante un enfoque MapReduce conforme a los pasos que se ilustran en el tutorial práctico.
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\subsection{Ejercicio 2}
+
+¿Cómo podríamos obtener las ciudades más distintas en cada país?
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\subsection{Ejercicio 3}
+
+¿Qué ocurre si en un país hay dos parejas de ciudades que están a la misma distancia mínima? ¿Cómo harías para que aparecieran todas?
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\subsection{Ejercicio 4}
+
+¿Cómo podríamos obtener adicionalmente la cantidad de parejas de ciudades evaluadas para cada país consultado?
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\subsection{Ejercicio 5}
+
+¿Cómo podríamos la distancia media entre las ciudades de cada país?
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\subsection{Ejercicio 6}
+
+¿Mejoraría el rendimiento si creamos un índice? ¿Sobre qué campo? Comprobadlo
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+%----------------------------------------------------------------------------------------
+%	REFERENCIAS
+%----------------------------------------------------------------------------------------
+
+%\newpage
+
+%\bibliography{referencias} %archivo referencias.bib que contiene las entradas 
+%\bibliographystyle{plain} % hay varias formas de citar
+
+\end{document}
