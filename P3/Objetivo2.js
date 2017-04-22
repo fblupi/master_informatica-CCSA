@@ -30,6 +30,32 @@ db.pedidos.aggregate(
 // distintas a "Jaen" con facturación media mayor de 5000. Ordenación por 
 // Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
 
+// !!! Queda lo de eliminar el _id y poner el nombre en mayúsculas
+
+db.pedidos.aggregate(
+    [
+        {
+            $group: 
+            {
+                "_id": "$Localidad", 
+                facturacion_media: {$avg: "$Facturacion"}
+            }
+        }, 
+        {
+            $match: 
+            {
+                "_id": {$ne: "Jaen"}, 
+                facturacion_media: {$gt: 5000}
+            }
+        }, 
+        {
+            $sort: 
+            {
+                "_id": -1
+            }
+        }
+    ]
+);
 
 // 5. Calcula la cantidad total facturada por cada cliente (uso de "unwind")
 
