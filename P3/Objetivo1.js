@@ -10,8 +10,6 @@ load('/home/insertar_pedidos.js');
 
 db.pedidos.find().pretty();
 
-
-
 // 2. Visualiza sólo el primer documento de la colección. Utiliza los métodos 
 //    .limit() y .findOne()
 

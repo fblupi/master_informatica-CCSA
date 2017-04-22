@@ -30,8 +30,6 @@ db.pedidos.aggregate(
 // distintas a "Jaen" con facturación media mayor de 5000. Ordenación por 
 // Localidad descendente. Eliminar el _id y poner el nombre en mayúsculas.
 
-// !!! Queda lo de eliminar el _id y poner el nombre en mayúsculas
-
 db.pedidos.aggregate(
     [
         {
@@ -52,6 +50,14 @@ db.pedidos.aggregate(
             $sort: 
             {
                 "_id": -1
+            }
+        },
+        {
+            $project:
+            {
+                "_id": 0,
+                "Localidad": {$toUpper: "$_id"},
+                "facturacion_media": 1
             }
         }
     ]
