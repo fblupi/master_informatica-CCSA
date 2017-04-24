@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>BIM y Cloud Computing</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background="img/bg.jpg">
+					<h1>BIM y Cloud Computing</h1>
+					<hr>
+					<p>Francisco Javier Bolívar Lupiáñez</p>
+					<a href="https://fblupi.es/master_informatica-CCSA/">fblupi.es/master_informatica-CCSA</a>
+				</section>
+				<section>
+					<section>
+						<h1>¿Qué es BIM?</h1>
+					</section>
+					<section>
+						<p>BIM (Building Information Modeling) es un término que apareció en 2002 de la boca de Jerry Laiserin. Aunque apareció en 1984 cuando Graphisoft lo implementó con el nombre de Virtual Building en su programa ArchiCAD.</p>
+						<p>El BIM es el proceso de generación y gestión de datos de un edificio durante su ciclo de vida.</p>
+					</section>
+					<section>
+						<img src="img/BIM.jpg" alt="Esquema BIM"/>
+					</section>
+				</section>
+				<section>
+					<h1>Referencias</h1>
+					<ol>
+						<li>Lee, G., Sacks, R., Eastman, C. M. (2006). "Specifying parametric building object behavior (BOB) for a building information modeling system". In <i>Automation in Construction</i> 15 (6). pp. 758-776</li>
+						<li>Chuang, T. H., Lee, B. C., &amp; Wu, I. C. (2011). "Applying cloud computing technology to BIM visualization and manipulation". In <i>28th International Symposium on Automation and Robotics in Construction</i> (Vol. 201, No. 1, pp. 144-149).</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
