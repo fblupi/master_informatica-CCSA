@@ -1144,11 +1144,95 @@ mongoimport -u <user> -p <clave> --db <bd> --collection cities --type csv --head
 Encontrar las ciudades más cercanas sobre la colección recién creada mediante un enfoque MapReduce conforme a los pasos que se ilustran en el tutorial práctico.
 
 \begin{lstlisting}
+var mapCode = function() {
+  emit(
+    this.CountryID,
+    { 
+      "data":
+      [
+        {
+          "city": this.City,
+          "lat":  this.Latitude,
+          "lon":  this.Longitude
+        }
+      ]
+    }
+  );
+}
 
+var reduceCode = function(key, values) {
+  var reduced = { 
+    "data": [] 
+  };
+  for (var i in values) {
+    var inter = values[i];
+    for (var j in inter.data) {
+      reduced.data.push(inter.data[j]);
+    }
+  }
+  return reduced;
+}
+
+var finalize =  function (key, reduced) {
+  if (reduced.data.length == 1) {
+    return { 
+      "message" : "Este pais solo contiene una ciudad" 
+    };
+  }
+  var min_dist = 999999999999;
+  var city1 = { 
+    "city": ""
+  };
+  var city2 = { 
+    "city": "" 
+  };
+  var c1;
+  var c2;
+  var d;
+  for (var i in reduced.data) {
+    for (var j in reduced.data) {
+      if (i >= j) {
+        continue;
+      }
+      c1 = reduced.data[i];
+      c2 = reduced.data[j];
+      d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+      if (d < min_dist && d > 0) {
+        min_dist = d;
+        city1 = c1;
+        city2 = c2;
+      }
+    }
+  }
+  return {
+    "city1": city1.city, 
+    "city2": city2.city, 
+    "dist": Math.sqrt(min_dist) 
+  };
+}
+
+db.runCommand({
+  mapReduce: "cities",
+  map: mapCode,
+  reduce: reduceCode,
+  finalize: finalize,
+  query: { CountryID: { $ne: 254 } },
+  out: { merge: "ciudades_proximas" }
+});
 \end{lstlisting}
 
 \begin{lstlisting}
-
+{
+  "result" : "ciudades_proximas",
+  "timeMillis" : 1009,
+  "counts" : {
+    "input" : 7042,
+    "emit" : 7042,
+    "reduce" : 260,
+    "output" : 215
+  },
+  "ok" : 1
+}
 \end{lstlisting}
 
 \subsection{Ejercicio 2}
@@ -1156,11 +1240,95 @@ Encontrar las ciudades más cercanas sobre la colección recién creada mediante
 ¿Cómo podríamos obtener las ciudades más distintas en cada país?
 
 \begin{lstlisting}
+var mapCode = function() {
+  emit(
+    this.CountryID,
+    { 
+      "data":
+      [
+        {
+          "city": this.City,
+          "lat":  this.Latitude,
+          "lon":  this.Longitude
+        }
+      ]
+    }
+  );
+}
 
+var reduceCode = function(key, values) {
+  var reduced = { 
+    "data": [] 
+  };
+  for (var i in values) {
+    var inter = values[i];
+    for (var j in inter.data) {
+      reduced.data.push(inter.data[j]);
+    }
+  }
+  return reduced;
+}
+
+var finalize =  function (key, reduced) {
+  if (reduced.data.length == 1) {
+    return { 
+      "message" : "Este pais solo contiene una ciudad" 
+    };
+  }
+  var max_dist = 0;
+  var city1 = { 
+    "city": ""
+  };
+  var city2 = { 
+    "city": "" 
+  };
+  var c1;
+  var c2;
+  var d;
+  for (var i in reduced.data) {
+    for (var j in reduced.data) {
+      if (i >= j) {
+        continue;
+      }
+      c1 = reduced.data[i];
+      c2 = reduced.data[j];
+      d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+      if (d > max_dist && d > 0) {
+        max_dist = d;
+        city1 = c1;
+        city2 = c2;
+      }
+    }
+  }
+  return {
+    "city1": city1.city, 
+    "city2": city2.city, 
+    "dist": Math.sqrt(max_dist) 
+  };
+}
+
+db.runCommand({
+  mapReduce: "cities",
+  map: mapCode,
+  reduce: reduceCode,
+  finalize: finalize,
+  query: { CountryID: { $ne: 254 } },
+  out: { merge: "ciudades_lejanas" }
+});
 \end{lstlisting}
 
 \begin{lstlisting}
-
+{
+  "result" : "ciudades_lejanas",
+  "timeMillis" : 1046,
+  "counts" : {
+    "input" : 7042,
+    "emit" : 7042,
+    "reduce" : 260,
+    "output" : 214
+  },
+  "ok" : 1
+}
 \end{lstlisting}
 
 \subsection{Ejercicio 3}
@@ -1168,11 +1336,91 @@ Encontrar las ciudades más cercanas sobre la colección recién creada mediante
 ¿Qué ocurre si en un país hay dos parejas de ciudades que están a la misma distancia mínima? ¿Cómo harías para que aparecieran todas?
 
 \begin{lstlisting}
+var mapCode = function() {
+  emit(
+    this.CountryID,
+    { 
+      "data":
+      [
+        {
+          "city": this.City,
+          "lat":  this.Latitude,
+          "lon":  this.Longitude
+        }
+      ]
+    }
+  );
+}
 
+var reduceCode = function(key, values) {
+  var reduced = { 
+    "data": [] 
+  };
+  for (var i in values) {
+    var inter = values[i];
+    for (var j in inter.data) {
+      reduced.data.push(inter.data[j]);
+    }
+  }
+  return reduced;
+}
+
+var finalize =  function (key, reduced) {
+  if (reduced.data.length == 1) {
+    return { 
+      "message" : "Este pais solo contiene una ciudad" 
+    };
+  }
+  var min_dist = 999999999999;
+  var cities = [];
+  var c1;
+  var c2;
+  var d;
+  for (var i in reduced.data) {
+    for (var j in reduced.data) {
+      if (i >= j) {
+        continue;
+      }
+      c1 = reduced.data[i];
+      c2 = reduced.data[j];
+      d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+      if (d < min_dist && d > 0) {
+        min_dist = d;
+        cities = [];
+        cities.push([c1.city, c2.city]);
+      } else if (d == min_dist) {
+        cities.push([c1.city, c2.city]);
+      }
+    }
+  }
+  return {
+    "cities": cities,
+    "dist": Math.sqrt(min_dist) 
+  };
+}
+
+db.runCommand({
+  mapReduce: "cities",
+  map: mapCode,
+  reduce: reduceCode,
+  finalize: finalize,
+  query: { CountryID: { $ne: 254 } },
+  out: { merge: "ciudades_proximas" }
+});
 \end{lstlisting}
 
 \begin{lstlisting}
-
+{
+  "result" : "ciudades_proximas",
+  "timeMillis" : 1120,
+  "counts" : {
+    "input" : 7042,
+    "emit" : 7042,
+    "reduce" : 260,
+    "output" : 215
+  },
+  "ok" : 1
+}
 \end{lstlisting}
 
 \subsection{Ejercicio 4}
@@ -1180,11 +1428,100 @@ Encontrar las ciudades más cercanas sobre la colección recién creada mediante
 ¿Cómo podríamos obtener adicionalmente la cantidad de parejas de ciudades evaluadas para cada país consultado?
 
 \begin{lstlisting}
+var mapCode = function() {
+  emit(
+    this.CountryID,
+    { 
+      "data":
+      [
+        {
+          "city": this.City,
+          "lat":  this.Latitude,
+          "lon":  this.Longitude
+        }
+      ]
+    }
+  );
+}
 
+var reduceCode = function(key, values) {
+  var reduced = { 
+    "data": [] 
+  };
+  for (var i in values) {
+    var inter = values[i];
+    for (var j in inter.data) {
+      reduced.data.push(inter.data[j]);
+    }
+  }
+  return reduced;
+}
+
+var finalize =  function (key, reduced) {
+  if (reduced.data.length == 1) {
+    return { 
+      "message" : "Este pais solo contiene una ciudad" 
+    };
+  }
+  var min_dist = 999999999999;
+  var city1 = { 
+    "city": ""
+  };
+  var city2 = { 
+    "city": "" 
+  };
+  var c1;
+  var c2;
+  var d;
+  var eval = 0;
+  for (var i in reduced.data) {
+    for (var j in reduced.data) {
+      if (i >= j) {
+        continue;
+      }
+      c1 = reduced.data[i];
+      c2 = reduced.data[j];
+      d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+      if (d > 0) {
+        eval++;
+        if (d < min_dist) {
+          min_dist = d;
+          city1 = c1;
+          city2 = c2;
+        }
+      }
+    }
+  }
+  return {
+    "city1": city1.city, 
+    "city2": city2.city, 
+    "cities": eval,
+    "dist": Math.sqrt(min_dist) 
+  };
+}
+
+db.runCommand({
+  mapReduce: "cities",
+  map: mapCode,
+  reduce: reduceCode,
+  finalize: finalize,
+  query: { CountryID: { $ne: 254 } },
+  out: { merge: "ciudades_proximas" }
+});
 \end{lstlisting}
 
 \begin{lstlisting}
-
+{
+  "result" : "ciudades_proximas",
+  "timeMillis" : 1038,
+  "counts" : {
+    "input" : 7042,
+    "emit" : 7042,
+    "reduce" : 260,
+    "output" : 215
+  },
+  "ok" : 1
+}
 \end{lstlisting}
 
 \subsection{Ejercicio 5}
@@ -1192,11 +1529,102 @@ Encontrar las ciudades más cercanas sobre la colección recién creada mediante
 ¿Cómo podríamos la distancia media entre las ciudades de cada país?
 
 \begin{lstlisting}
+var mapCode = function() {
+  emit(
+    this.CountryID,
+    { 
+      "data":
+      [
+        {
+          "city": this.City,
+          "lat":  this.Latitude,
+          "lon":  this.Longitude
+        }
+      ]
+    }
+  );
+}
 
+var reduceCode = function(key, values) {
+  var reduced = { 
+    "data": [] 
+  };
+  for (var i in values) {
+    var inter = values[i];
+    for (var j in inter.data) {
+      reduced.data.push(inter.data[j]);
+    }
+  }
+  return reduced;
+}
+
+var finalize =  function (key, reduced) {
+  if (reduced.data.length == 1) {
+    return { 
+      "message" : "Este pais solo contiene una ciudad" 
+    };
+  }
+  var min_dist = 999999999999;
+  var city1 = { 
+    "city": ""
+  };
+  var city2 = { 
+    "city": "" 
+  };
+  var c1;
+  var c2;
+  var d;
+  var eval = 0;
+  var tot = 0;
+  for (var i in reduced.data) {
+    for (var j in reduced.data) {
+      if (i >= j) {
+        continue;
+      }
+      c1 = reduced.data[i];
+      c2 = reduced.data[j];
+      d = Math.sqrt((c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon));
+      if (d > 0) {
+        eval++;
+        tot += d;
+        if (d < min_dist) {
+          min_dist = d;
+          city1 = c1;
+          city2 = c2;
+        }
+      }
+    }
+  }
+  return {
+    "city1": city1.city, 
+    "city2": city2.city, 
+    "dist_avg": tot / eval,
+    "dist": min_dist
+  };
+}
+
+db.runCommand({
+  mapReduce: "cities",
+  map: mapCode,
+  reduce: reduceCode,
+  finalize: finalize,
+  query: { CountryID: { $ne: 254 } },
+  out: { merge: "ciudades_proximas" }
+});
 \end{lstlisting}
 
 \begin{lstlisting}
-
+{
+  "result" : "ciudades_proximas",
+  "timeMillis" : 1073,
+  "counts" : {
+    "input" : 7042,
+    "emit" : 7042,
+    "reduce" : 260,
+    "output" : 215
+  },
+  "ok" : 1
+}
 \end{lstlisting}
 
 \subsection{Ejercicio 6}
