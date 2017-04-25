@@ -65,3 +65,30 @@ db.pedidos.aggregate(
 
 // 5. Calcula la cantidad total facturada por cada cliente (uso de "unwind")
 
+db.pedidos.aggregate(
+    [
+        {
+            $unwind: "$Pedidos"
+        },
+        {
+            $unwind: "$Pedidos.Productos"
+        },
+        {
+            $group: 
+            {
+                "_id": "$id_cliente", 
+                facturacion_total: 
+                {
+                    $sum: 
+                    {
+                        "$multiply": 
+                        [
+                            "$Pedidos.Productos.Precio_unidad",
+                            "$Pedidos.Productos.Cantidad"
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+);

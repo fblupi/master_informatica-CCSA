@@ -1094,11 +1094,39 @@ db.pedidos.aggregate(
 Calcula la cantidad total facturada por cada cliente (uso de ``unwind'')
 
 \begin{lstlisting}
-
+db.pedidos.aggregate(
+  [
+    {
+      $unwind: "$Pedidos"
+    },
+    {
+      $unwind: "$Pedidos.Productos"
+    },
+    {
+      $group: 
+      {
+        "_id": "$id_cliente", 
+        facturacion_total: 
+        {
+          $sum: 
+          {
+            "$multiply": 
+            [
+              "$Pedidos.Productos.Precio_unidad",
+              "$Pedidos.Productos.Cantidad"
+            ]
+          }
+        }
+      }
+    }  
+  ]  
+);
 \end{lstlisting}
 
 \begin{lstlisting}
-
+{ "_id" : 5555, "facturacion_total" : 1580 }
+{ "_id" : 2222, "facturacion_total" : 6327 }
+{ "_id" : 1111, "facturacion_total" : 830 }
 \end{lstlisting}
 
 \section{Objetivo nº 3. MapReduce}
