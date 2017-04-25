@@ -174,6 +174,80 @@ db.ciudades_lejanas.find().pretty();
 // 3. ¿Qué ocurre si en un país hay dos parejas de ciudades que están a la 
 //    misma distancia mínima? ¿Cómo harías para que aparecieran todas?
 
+var mapCode = function() {
+    emit(
+        this.CountryID,
+        { 
+            "data":
+            [
+                {
+                    "city": this.City,
+                    "lat":  this.Latitude,
+                    "lon":  this.Longitude
+                }
+            ]
+        }
+    );
+}
+
+var reduceCode = function(key, values) {
+	var reduced = { 
+        "data": [] 
+    };
+	for (var i in values) {
+		var inter = values[i];
+		for (var j in inter.data) {
+			reduced.data.push(inter.data[j]);
+		}
+	}
+	return reduced;
+}
+ 
+var finalize =  function (key, reduced) {
+	if (reduced.data.length == 1) {
+		return { 
+            "message" : "Este país solo contiene una ciudad" 
+        };
+	}
+	var min_dist = 999999999999;
+    var cities = [];
+	var c1;
+	var c2;
+	var d;
+	for (var i in reduced.data) {
+		for (var j in reduced.data) {
+			if (i >= j) {
+                continue;
+            }
+			c1 = reduced.data[i];
+			c2 = reduced.data[j];
+			d = (c1.lat - c2.lat) * (c1.lat - c2.lat) + (c1.lon - c2.lon) * (c1.lon - c2.lon);
+			if (d < min_dist && d > 0) {
+				min_dist = d;
+                cities = [];
+                cities.push([c1.city, c2.city]);
+			} else if (d == min_dist) {
+                cities.push([c1.city, c2.city]);
+            }
+		}
+	}
+	return {
+        "cities": cities,
+        "dist": Math.sqrt(min_dist) 
+    };
+}
+
+db.runCommand({
+    mapReduce: "cities",
+    map: mapCode,
+    reduce: reduceCode,
+    finalize: finalize,
+    query: { CountryID: { $ne: 254 } },
+    out: { merge: "ciudades_proximas" }
+});
+
+db.ciudades_proximas.find().pretty();
+
 // 4. ¿Cómo podríamos obtener adicionalmente la cantidad de parejas de 
 //    ciudades evaluadas para cada país consultado?
 
