@@ -72,7 +72,7 @@
 				</section>
 				<section>
 					<section>
-						<h1>Visualización de BIM</h1>
+						<h1>Visualización</h1>
 					</section>
 					<section>
 						<p>El 83% de la información recibida por los humanos provienen del sentido de la vista.</p>
@@ -83,6 +83,70 @@
 						<h2>RealityServer</h2>
 						<p>El renderizado se hace en el servidor.</p>
 						<p>Al cliente le llegan imágenes comprimidas.</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Edición</h1>
+					</section>
+					<section>
+						<p>Creación de una GUI que permita al usuario interactuar con los modelos.</p>
+						<p>Requisito no funcional de velocidad importante.</p>
+					</section>
+					<section>
+						<p>Debe seguir los principios de:</p>
+						<ul>
+							<li>Visible</li>
+							<li>Retroalimentación</li>
+							<li>Fácil de recordad</li>
+							<li>Coherencia</li>
+							<li>Consistencia</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Framework del sistema</h1>
+					</section>
+					<section>
+						<img src="img/system-framework.jpg" alt="Esquema Framework"/>
+					</section>
+					<section>
+						<h2>Capa cliente</h2>
+						<p>GUI con la que el cliente interacciona.</p>
+						<p>En el MVC sería la vista.</p>
+					</section>
+					<section>
+						<h2>Capa aplicación</h2>
+						<p>SaaS. Engloba la funcionalidad que se ejecuta en el lado del servidor.</p>
+						<p>Provee acceso a las funciones del sistema como un servicio web.</p>
+						<p>En el MVC sería el controlador.</p>
+					</section>
+					<section>
+						<h2>Capa de datos</h2>
+						<p>Base de datos relacional donde se almacena la información sobre el BIM.</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Conclusiones</h1>
+					</section>
+					<section>
+						<p>Problemática BIM:</p>
+						<ul>
+							<li>Modelos muy grandes</li>
+							<li>Distintos formatos</li>
+							<li>Acceso por distintos usuarios con una misión distinta</li>
+						</ul>
+					</section>
+					<section>
+						<p>Solución CC:</p>
+						<ul>
+							<li>Se pierde menos tiempo en transferir ficheros entre los distintos participantes</li>
+							<li>La capa de presentación puede variar dependiendo del usuario y su objetivo</li>
+							<li>Dependiendo de la carga de usuarios activos se usarán más o menos máquinas ahorrando costes</li>
+							<li>Ídem con almacenamiento</li>
+						</ul>
 					</section>
 				</section>
 				<section>
