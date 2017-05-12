@@ -12,11 +12,11 @@ import org.apache.hadoop.mapred.JobConf;
 public class Bal {
 	public static void main(String[] args) throws IOException {
 		if (args.length != 2) {
-			System.err.println("Usage: BalTemperature <input path> <output path>");
+			System.err.println("Usage: Bal <input path> <output path>");
 			System.exit(-1);
 		}
 		JobConf conf = new JobConf(Bal.class);
-		conf.setJobName("Bal temperature");
+		conf.setJobName("Bal");
 		FileInputFormat.addInputPath(conf, new Path(args[0]));
 		FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 		conf.setMapperClass(BalMapper.class);

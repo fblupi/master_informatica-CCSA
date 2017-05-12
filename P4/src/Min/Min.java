@@ -12,11 +12,11 @@ import org.apache.hadoop.mapred.JobConf;
 public class Min {
 	public static void main(String[] args) throws IOException {
 		if (args.length != 2) {
-			System.err.println("Usage: MinTemperature <input path> <output path>");
+			System.err.println("Usage: Min <input path> <output path>");
 			System.exit(-1);
 		}
 		JobConf conf = new JobConf(Min.class);
-		conf.setJobName("Min temperature");
+		conf.setJobName("Min");
 		FileInputFormat.addInputPath(conf, new Path(args[0]));
 		FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 		conf.setMapperClass(MinMapper.class);

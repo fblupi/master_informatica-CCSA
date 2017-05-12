@@ -12,11 +12,11 @@ import org.apache.hadoop.mapred.JobConf;
 public class MaxMinAll {
 	public static void main(String[] args) throws IOException {
 		if (args.length != 2) {
-			System.err.println("Usage: MaxMinAllTemperature <input path> <output path>");
+			System.err.println("Usage: MaxMinAll <input path> <output path>");
 			System.exit(-1);
 		}
 		JobConf conf = new JobConf(MaxMinAll.class);
-		conf.setJobName("MaxMinAll temperature");
+		conf.setJobName("MaxMinAll");
 		FileInputFormat.addInputPath(conf, new Path(args[0]));
 		FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 		conf.setMapperClass(MaxMinAllMapper.class);

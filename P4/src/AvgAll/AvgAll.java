@@ -12,11 +12,11 @@ import org.apache.hadoop.mapred.JobConf;
 public class AvgAll {
 	public static void main(String[] args) throws IOException {
 		if (args.length != 2) {
-			System.err.println("Usage: AvgAllTemperature <input path> <output path>");
+			System.err.println("Usage: AvgAll <input path> <output path>");
 			System.exit(-1);
 		}
 		JobConf conf = new JobConf(AvgAll.class);
-		conf.setJobName("AvgAll temperature");
+		conf.setJobName("AvgAll");
 		FileInputFormat.addInputPath(conf, new Path(args[0]));
 		FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 		conf.setMapperClass(AvgAllMapper.class);
