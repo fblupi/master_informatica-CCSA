@@ -1,7 +1,6 @@
 package oldapi;
 import java.io.IOException;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.FileInputFormat;
@@ -21,8 +20,10 @@ public class Corr {
 		FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 		conf.setMapperClass(CorrMapper.class);
 		conf.setReducerClass(CorrReducer.class);
+		conf.setMapOutputKeyClass(Text.class);
+		conf.setMapOutputValueClass(Text.class);
 		conf.setOutputKeyClass(Text.class);
-		conf.setOutputValueClass(Text.class);
+		conf.setOutputValueClass(DoubleWritable.class);
 		JobClient.runJob(conf);
 	}
 }
