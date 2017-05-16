@@ -341,7 +341,24 @@ Avg (0) 0.2549619599173307
 \subsection{Tarea 4}
 
 Repite el proceso sobre un conjunto de mayor volumen (Ej: \texttt{/user/isaac/datasets/} \texttt{higgs...}) ¿Hay grandes diferencias de tiempo?:
-
+\\ \\
+Para el conjunto de datos ECBDL14 que cuenta con, aproximadamente, 3.000.000 de filas obtenemos los siguientes tiempos:
+\\ \\
+$ t_{map} = 10s $
+\\
+$ t_{reduce} = 9s $
+\\
+$ t_{total} = 19s $
+\\ \\
+Para el conjunto de datos de HiggsImg10 que cuenta con, aproximadamente, 500.000 de filas obtenemos los siguientes tiempos:
+\\ \\
+$ t_{map} = 6s $
+\\
+$ t_{reduce} = 8s $
+\\
+$ t_{total} = 14s $
+\\ \\
+En teoría, al ser el segundo conjunto de datos seis veces menor, el tiempo debería ser seis veces menor, no obstante no es así. El tiempo del map se ve reducido en un 40\% mientras que el del reduce solo en un 12\% aproximadamente. Por lo que el tiempo no es lineal ya que depende del número de mappers y reducers que se lancen.
 
 \subsection{Tarea 5}
 
