@@ -29,3 +29,5 @@ hadoop jar /tmp/mahout-distribution-sige.jar \
 	-ds $DATASET.info \
 	-m output_RF_${TREES}_${MAP} \
 	-a -mr -o output_RF_predict_out_${TREES}_${MAP};
+
+hdoop fs -cat da_confusion_matrix.txt
