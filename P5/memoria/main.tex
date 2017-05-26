@@ -90,9 +90,23 @@ Las tareas a realizar serán las siguientes:
 	\end{itemize}
 \end{itemize}
 
+\newpage
 \subsection{Características del modelo}
 
 \subsubsection{Número de nodos total}
+
+\begin{table}[H]
+	\centering
+	\caption{Número de nodos total para 64, 128 y 256 maps y 10, 100 y 1000 árboles}
+	\label{tab:nodos-total}
+	\begin{tabular}{l|lll|}
+		\cline{2-4}
+		& 10    & 100    & 1000    \\ \hline
+		\multicolumn{1}{|l|}{64}  & 13014 & 128674 & 1285305 \\
+		\multicolumn{1}{|l|}{128} & 6974  & 70146  & 681270  \\
+		\multicolumn{1}{|l|}{256} & 3671  & 36593  & 362281  \\ \hline
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
 	\centering
@@ -101,7 +115,23 @@ Las tareas a realizar serán las siguientes:
 	\label{fig:nodos-total}
 \end{figure}
 
+Como vemos el número de nodos total depende, sobre todo, del número de árboles (a mayor número de árboles mayor número de nodos) aunque también depende del número de maps (a mayor número de maps, menor número de nodos).
+
+\newpage
 \subsubsection{Número de nodos promedio}
+
+\begin{table}[H]
+	\centering
+	\caption{Número de nodos promedio para 64, 128 y 256 maps y 10, 100 y 1000 árboles}
+	\label{tab:nodos-promedio}
+	\begin{tabular}{l|lll|}
+		\cline{2-4}
+		& 10    & 100    & 1000    \\ \hline
+		\multicolumn{1}{|l|}{64}  & 1301 & 1286 & 1285 \\
+		\multicolumn{1}{|l|}{128} & 694  & 701  & 681  \\
+		\multicolumn{1}{|l|}{256} & 367  & 365  & 362  \\ \hline
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
 	\centering
@@ -110,7 +140,23 @@ Las tareas a realizar serán las siguientes:
 	\label{fig:nodos-promedio}
 \end{figure}
 
+Como vemos el número de nodos promedio del número de maps (a mayor número de maps, menor número de nodos). En este caso, el número de árboles no es un factor tan determinante.
+
+\newpage
 \subsubsection{Profundidad máxima del árbol}
+
+\begin{table}[H]
+	\centering
+	\caption{Profundidad máxima para 64, 128 y 256 maps y 10, 100 y 1000 árboles}
+	\label{tab:profundidad-maxima}
+	\begin{tabular}{l|lll|}
+		\cline{2-4}
+		& 10    & 100    & 1000    \\ \hline
+		\multicolumn{1}{|l|}{64}  & 19 & 18 & 18 \\
+		\multicolumn{1}{|l|}{128} & 15 & 16 & 15 \\
+		\multicolumn{1}{|l|}{256} & 13 & 14 & 13 \\ \hline
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
 	\centering
@@ -119,7 +165,23 @@ Las tareas a realizar serán las siguientes:
 	\label{fig:profundidad-maxima}
 \end{figure}
 
+Como vemos, al igual que con el número de nodos promedio, la profundidad máxima del árbol depende del número de maps (a mayor número de maps, menor número de nodos).
+
+\newpage
 \subsection{Tiempo de ejecución para entrenamiento}
+
+\begin{table}[H]
+	\centering
+	\caption{Tiempo de ejecución para entrenamiento para 64, 128 y 256 maps y 10, 100 y 1000 árboles}
+	\label{tab:tiempo-entrenamiento}
+	\begin{tabular}{l|lll|}
+		\cline{2-4}
+		& 10    & 100    & 1000    \\ \hline
+		\multicolumn{1}{|l|}{64}  & 18.915 & 33.955 & 44.287 \\
+		\multicolumn{1}{|l|}{128} & 21.28  & 31.201 & 34.635 \\
+		\multicolumn{1}{|l|}{256} & 30.97  & 31.326 & 33.59  \\ \hline
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
 	\centering
@@ -128,9 +190,29 @@ Las tareas a realizar serán las siguientes:
 	\label{fig:tiempo-entrenamiento}
 \end{figure}
 
+En el caso del tiempo el comportamiento es curioso porque actúa de forma distinta dependiendo del número de árboles:
+\begin{itemize}
+	\item Si hay pocos árboles (10), a mayor sea el número de maps, mayor será el tiempo.
+	\item Si hay muchos árboles (100 y 1000), a mayor sea el número de maps, menor será el tiempo. Este efecto se nota más todavía a mayor sea el número de árboles.
+\end{itemize}
+
+\newpage
 \subsection{Medidas de calidad}
 
 \subsubsection{Accuracy estándar (test)}
+
+\begin{table}[H]
+	\centering
+	\caption{Accuracy estándar sobre la partición de test para entrenamiento para 64, 128 y 256 maps y 10, 100 y 1000 árboles}
+	\label{tab:accuracy-test}
+	\begin{tabular}{l|lll|}
+		\cline{2-4}
+		& 10    & 100    & 1000    \\ \hline
+		\multicolumn{1}{|l|}{64}  & 87.768  & 89.418  & 89.674  \\
+		\multicolumn{1}{|l|}{128} & 87.3175 & 88.1775 & 89.43   \\
+		\multicolumn{1}{|l|}{256} & 86.848  & 87.787  & 89.2015 \\ \hline
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
 	\centering
@@ -139,7 +221,23 @@ Las tareas a realizar serán las siguientes:
 	\label{fig:accuracy-test}
 \end{figure}
 
+El número de árboles influye mucho en el resultado. A mayor sea mejor resultado se obtendrá. También influye positivamente un mayor número de maps.
+
+\newpage
 \subsubsection{Accuracy estándar (training)}
+
+\begin{table}[H]
+	\centering
+	\caption{Accuracy estándar sobre la partición de training para entrenamiento para 64, 128 y 256 maps y 10, 100 y 1000 árboles}
+	\label{tab:accuracy-training}
+	\begin{tabular}{l|lll|}
+		\cline{2-4}
+		& 10    & 100    & 1000    \\ \hline
+		\multicolumn{1}{|l|}{64}  & 87.7676 & 89.5021 & 89.7058 \\
+		\multicolumn{1}{|l|}{128} & 87.3186 & 88.281  & 89.4641 \\
+		\multicolumn{1}{|l|}{256} & 86.8689 & 87.6859 & 89.2154 \\ \hline
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
 	\centering
@@ -148,7 +246,23 @@ Las tareas a realizar serán las siguientes:
 	\label{fig:accuracy-training}
 \end{figure}
 
+Los resultados obtenidos sobre el conjunto de entrenamiento son algo mejores a los obtenidos con el conjunto de test, no obstante son muy parecidos.
+
+\newpage
 \subsubsection{Media geométrica (test)}
+
+\begin{table}[H]
+	\centering
+	\caption{Media geométrica sobre la partición de test para entrenamiento para 64, 128 y 256 maps y 10, 100 y 1000 árboles}
+	\label{tab:media-geometrica-test}
+	\begin{tabular}{l|lll|}
+		\cline{2-4}
+		& 10    & 100    & 1000    \\ \hline
+		\multicolumn{1}{|l|}{64}  & 0.87518301 & 0.89188743 & 0.8943475  \\
+		\multicolumn{1}{|l|}{128} & 0.87026243 & 0.87948937 & 0.89185739 \\
+		\multicolumn{1}{|l|}{256} & 0.86691769 & 0.87623183 & 0.88985665 \\ \hline
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
 	\centering
@@ -157,7 +271,23 @@ Las tareas a realizar serán las siguientes:
 	\label{fig:media-geometrica-test}
 \end{figure}
 
+Con la media geométrica el comportamiento es muy similar al obtenido con el accuracy.
+
+\newpage
 \subsubsection{Media geométrica (training)}
+
+\begin{table}[H]
+	\centering
+	\caption{Media geométrica sobre la partición de training para entrenamiento para 64, 128 y 256 maps y 10, 100 y 1000 árboles}
+	\label{tab:media-geometrica-training}
+	\begin{tabular}{l|lll|}
+		\cline{2-4}
+		& 10    & 100    & 1000    \\ \hline
+		\multicolumn{1}{|l|}{64}  & 0.87556729 & 0.89285623 & 0.89478267 \\
+		\multicolumn{1}{|l|}{128} & 0.87094252 & 0.88039306 & 0.8923021  \\
+		\multicolumn{1}{|l|}{256} & 0.86500017 & 0.87518159 & 0.89018632 \\ \hline
+	\end{tabular}
+\end{table}
 
 \begin{figure}[H]
 	\centering
@@ -165,6 +295,8 @@ Las tareas a realizar serán las siguientes:
 	\caption{Media geométrica sobre la partición de training para 64, 128 y 256 maps y 10, 100 y 1000 árboles}
 	\label{fig:media-geometrica-training}
 \end{figure}
+
+Al igual que con el accuracy, la diferencia entre la media geométrica sobre el conjunto de training no difiere mucho a la obtenida sobre el conjunto de test.
 
 %----------------------------------------------------------------------------------------
 %	REFERENCIAS
